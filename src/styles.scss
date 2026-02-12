@@ -1,14 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
-:root {
-    --primary-color: #111827;
-    --bg-color: #ffffff;
-}
+:root { 
+    // Primary colors
+    --primary-color: #ebdd22; 
+    --secondary-color: #4d2670;
+    --background-color: #242933; 
+    --error-color: #991b1b;
+    --text-color: #ebe3e3;
+    
+    // Login 
+    --login-card-color: #4e4e50;
+    --login-card-shadow: rgba(0, 0, 0, 0.05);
+    --login-focus-shadow: rgba(220, 207, 20, 0.838);
+    --login-button-hover: #492568;
+    --disabled-button-color: #3a1f4d;
+} 
 
 html, body {
     height: 100%;
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    /* Fuente nitida */
+    background-color: var(--background-color);
+    // Fuente nitida
     -webkit-font-smoothing: antialiased; 
 }

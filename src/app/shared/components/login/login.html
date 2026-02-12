@@ -1,0 +1,41 @@
+<div class="login-container">
+    <div class="login-card">
+        <header>
+            <h1>Welcome</h1>
+            <p>Enter your credentials to <span>log in.</span></p>
+        </header>
+        <form (ngSubmit)="onSubmit()">
+            <div class="inputs">
+                <label>Email</label>
+                <input 
+                    type="email"
+                    [(ngModel)]="email"
+                    name="email"
+                    placeholder="mail@example.com"
+                    required
+                >
+            </div>
+
+            <div class="inputs">
+                <label>Password</label>
+                <input 
+                    type="password"
+                    [(ngModel)]="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            @if (errorMsg()) {
+                <div class="error-banner">
+                    {{errorMsg()}}
+                </div>
+            }
+
+            <button type="submit" [disabled]="loading()">
+                {{ loading() ? 'Logging in...' : 'Log In' }}
+            </button>
+        </form>
+    </div>
+</div>
