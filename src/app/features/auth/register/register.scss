@@ -1,0 +1,112 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    .register-card {
+        background-color: var(--auth-card-color);
+        width: 100%;
+        max-width: 400px;
+        padding: 2.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--auth-card-color);
+        box-shadow: 0 10px 25px var(--auth-card-shadow);
+
+        .register-title {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+        }
+    }
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .register-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        input {
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--auth-input-border);
+            background-color: var(--auth-bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+
+            &::placeholder {
+                color: var(--auth-secondary-text);
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px var(--auth-focus-shadow);
+            }
+        }
+    }
+}
+
+.error-message {
+    background-color: var(--error-color);
+    border: 1px solid var(--error-color);
+    color: var(--text-color);
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.btn-submit {
+    background-color: var(--auth-button-hover);
+    color: var(--text-color);
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.1);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
+.register-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--auth-secondary-text);
+
+    span {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

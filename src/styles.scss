@@ -1,17 +1,19 @@
 :root { 
     // Primary colors
     --primary-color: #ebdd22; 
-    --secondary-color: #4d2670;
+    --secondary-color: #8600fb;
     --background-color: #242933; 
     --error-color: #991b1b;
     --text-color: #ebe3e3;
     
-    // Login 
-    --login-card-color: #4e4e50;
-    --login-card-shadow: rgba(0, 0, 0, 0.05);
-    --login-focus-shadow: rgba(220, 207, 20, 0.838);
-    --login-button-hover: #492568;
-    --disabled-button-color: #3a1f4d;
+    // Login & Register
+    --auth-card-color: #1f1f25;
+    --auth-card-shadow: rgba(0, 0, 0, 0.05);
+    --auth-input-border: #d8a006;
+    --auth-focus-shadow: #c39004;
+    --auth-button-hover: #492568;
+    --auth-secondary-text: #9ca3af;
+    --auth-bg-color: #3b3b48;
 } 
 
 html, body {

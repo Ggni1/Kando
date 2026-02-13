@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { Login } from './shared/components/login/login';
-import { Dashboard } from './shared/components/dashboard/dashboard';
+//
+import { Register } from './features/auth/register/register';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', component: Login },
-    { path: 'dashboard', component: Dashboard },
+    { path: '', redirectTo: 'register', pathMatch: 'full' },
+   // { path: 'login', component: LoginComponent },
+    { path: 'register', component: Register },
 ];
