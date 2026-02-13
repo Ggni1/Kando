@@ -6,7 +6,7 @@ export const Ctes = {
         //Url para conectarte
         url: 'https://imawpbvponmtvaeemkms.supabase.co',
         //key anonima para conectarte
-        anonKey: 'sb_publishable_8oJcEsqudo4yfvOhaY6RbA_yTnFMeri'
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltYXdwYnZwb25tdHZhZWVta21zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDE4ODAsImV4cCI6MjA4NjQxNzg4MH0.JwcxUf171gT-3n3TRo_F4ig5xUNEDh2XNklNNkzX6Ng'
     },
     app:{
         name: 'Kando',
