@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.scss'
 })
@@ -24,18 +25,33 @@ export class Register {
     confirmPassword: ['', [Validators.required]],
   });
 
+  clearError() {
+    if (this.errorMessage) {
+      this.errorMessage = '';
+    }
+  }
+
   async onSubmit() {
+    this.errorMessage = '';
     const { email, password, confirmPassword } = this.form.value;
+
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      setTimeout(() => {
       this.errorMessage = 'Please fill in all fields correctly.';
-    } else if (password !== confirmPassword) {
-      this.errorMessage = 'Passwords do not match.';
+      }, 10);
+    } else if (password !== confirmPassword) {1
+      setTimeout(() => {
+        this.errorMessage = 'Passwords do not match.';
+      }, 10);
     } else {
       try {
         await this.authService.signUp(email!, password!);
       } catch (error: any) {
         console.log(error.message);
-        this.errorMessage = 'Registration failed. Please try again.';
+        setTimeout(() => {
+          this.errorMessage = 'Registration failed. Please try again.';
+        }, 10);
       }
     } 
   }

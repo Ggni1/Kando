@@ -4,17 +4,17 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
             <div class="register-field">
                 <label>Email</label>
-                <input type="email" formControlName="email" placeholder="example@gmail.com">
+                <input (focus)="clearError()" type="email" formControlName="email" placeholder="example@gmail.com">
             </div>
 
             <div class="register-field">
                 <label>Password</label>
-                <input type="password" formControlName="password" placeholder="Minimum 8 characters">
+                <input (focus)="clearError()" type="password" formControlName="password" placeholder="Minimum 8 characters">
             </div>
 
             <div class="register-field">
             <label>Confirm Password</label>
-            <input type="password" formControlName="confirmPassword" placeholder="Repeat your password">
+            <input (focus)="clearError()"  type="password" formControlName="confirmPassword" placeholder="Repeat your password">
             </div>
 
             @if (errorMessage) {
@@ -23,7 +23,7 @@
                 </div>
             }
             <button type="submit" [disabled]="form.invalid" class="btn-submit">Register</button>
-            <p class="register-link">Already have an <span>account</span>? <a routerLink="/login">Log In</a>
+            <p class="register-link">Already have an account? <a routerLink="/login">Log In</a>
         </p>
         </form>
     </div>

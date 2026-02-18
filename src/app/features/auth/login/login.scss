@@ -1,10 +1,10 @@
-.register-container {
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 
-    .register-card {
+    .login-card {
         background-color: var(--auth-card-color);
         width: 100%;
         max-width: 400px;
@@ -13,7 +13,7 @@
         border: 1px solid var(--auth-card-color);
         box-shadow: 0 10px 25px var(--auth-card-shadow);
 
-        .register-title {
+        .login-title {
             color: var(--secondary-color);
             text-align: center;
             margin-bottom: 2rem;
@@ -22,12 +22,12 @@
     }
 }
 
-.register-form {
+.login-form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
 
-    .register-field {
+    .login-field {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -46,10 +46,6 @@
             color: var(--text-color);
             font-size: 1rem;
             transition: all 0.2s ease-in-out;
-
-            &::placeholder {
-                color: var(--auth-secondary-text);
-            }
 
             &:focus {
                 outline: none;
@@ -90,7 +86,7 @@
     }
 }
 
-.register-link {
+.login-link {
     text-align: center;
     font-size: 0.9rem;
     color: var(--auth-secondary-text);
@@ -104,4 +100,4 @@
             text-decoration: underline;
         }
     }
-}
+}   

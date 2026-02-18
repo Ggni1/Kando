@@ -1,0 +1,29 @@
+<div class="login-container">
+    <div class="login-card">
+        <h2 class="login-title">Welcome back</h2>
+        
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+            <div class="login-field">
+                <label>Email</label>
+                <input (focus)="clearError()" type="email" formControlName="email" placeholder="example@gmail.com">
+            </div>
+
+            <div class="login-field">
+                <label>Password</label>
+                <input (focus)="clearError()" type="password" formControlName="password" placeholder="Enter your password">            
+            </div>
+
+            @if (errorMessage) {
+                <div class="error-message">
+                    {{ errorMessage }}
+                </div>
+            }
+
+            <button type="submit" [disabled]="form.invalid" class="btn-submit">Log In</button>
+            
+            <p class="login-link">
+                Don't have an account? <a routerLink="/register">Register</a>
+            </p>
+        </form>
+    </div>
+</div>
