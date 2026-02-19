@@ -58,10 +58,14 @@ npm install
 
 3. Configurar variables de entorno
 
-Las variables de Supabase se encuentran en el archivo `src/app/.env/Ctes.ts`:
+Las variables de Supabase se gestionan a través de archivos de entorno:
+
+**Para desarrollo local:** `src/environments/environment.ts`
+**Para producción:** `src/environments/environment.prod.ts`
 
 ```typescript
-export const Ctes = {
+export const environment = {
+    production: false,
     supabase: {
         url: 'https://imawpbvponmtvaeemkms.supabase.co',
         anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ...'
@@ -69,16 +73,20 @@ export const Ctes = {
 };
 ```
 
-**Para desarrollo local:** Las credenciales ya están configuradas. Para producción, actualiza los valores en `src/app/.env/Ctes.ts` con tus propias credenciales de Supabase.
+El proyecto automáticamente selecciona el archivo correcto:
+- `ng serve` → usa `environment.ts` (desarrollo)
+- `ng build --configuration production` → usa `environment.prod.ts` (producción)
 
 ## Variables de Entorno Requeridas
 
-Las siguientes variables de Supabase están configuradas en `src/app/.env/Ctes.ts`:
+Las siguientes variables se definen en los archivos de `src/environments/`:
 
 | Variable | Descripción | Ubicación |
 |----------|-------------|-----------|
-| supabase.url | URL del proyecto Supabase | `Ctes.supabase.url` |
-| supabase.anonKey | Clave anónima de Supabase | `Ctes.supabase.anonKey` |
+| supabase.url | URL del proyecto Supabase | `environment.ts` |
+| supabase.anonKey | Clave anónima de Supabase | `environment.ts` |
+
+Para referencia, ver `.env.example` con plantilla de variables.
 
 ## Ejecución
 
@@ -124,7 +132,7 @@ Modo Invitado
 src/
 ├── app/
 │   ├── .env/
-│   │   └── Ctes.ts                 # Variables de entorno de Supabase
+│   │   └── Ctes.ts                 # Importa variables desde environment.ts
 │   ├── core/
 │   │   ├── guards/                 # Guardias de rutas (auth, role)
 │   │   ├── interceptors/           # HTTP interceptors
@@ -144,6 +152,9 @@ src/
 │   ├── app.routes.ts               # Configuración de rutas
 │   ├── app.ts                      # Componente raíz
 │   └── app.scss                    # Estilos globales
+├── environments/
+│   ├── environment.ts              # Variables de desarrollo
+│   └── environment.prod.ts         # Variables de producción
 ├── styles.scss                     # Estilos principales
 └── main.ts                         # Punto de entrada
 ```
@@ -251,7 +262,7 @@ Diseño adaptable a dispositivos desktop, tablet y móvil.
 
 Error de conexión a Supabase
 
-Verifica que las credenciales de Supabase sean correctas en `src/app/.env/Ctes.ts`
+Verifica que las credenciales de Supabase sean correctas en `src/environments/environment.ts` y `src/environments/environment.prod.ts`
 
 Puerto 4200 en uso
 
