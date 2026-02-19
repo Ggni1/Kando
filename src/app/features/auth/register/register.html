@@ -1,6 +1,6 @@
 <div class="register-container">
     <div class="register-card">
-        @if (registrationSuccess) {
+        @if (registrationSuccess()) {
             <div class="success-message">
                 <h2 class="register-title">Verify your email</h2>
                 <p>We have sent a confirmation link to your email address.</p>
@@ -17,7 +17,7 @@
                 <div class="register-field">
                     <label>Email</label>
                     <input 
-                        (input)="clearError()" 
+                        (focus)="clearError()" 
                         type="email" 
                         formControlName="email" 
                         placeholder="example@gmail.com">
@@ -27,12 +27,12 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input 
-                            [type]="showPassword ? 'text' : 'password'" 
+                            [type]="showPassword() ? 'text' : 'password'" 
                             formControlName="password" 
-                            (input)="clearError()"
+                            (focus)="clearError()"
                             placeholder="Minimum 8 characters">
                         
-                        <button type="button" (click)="togglePassword()" class="btn-eye"><mat-icon style="color: white;">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+                            <button type="button" (click)="togglePassword()" class="btn-eye"><mat-icon style="color: white;">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon></button>
                     </div>
                 </div>
 
@@ -40,16 +40,16 @@
                     <label>Confirm Password</label>
                     <div class="password-wrapper">
                         <input 
-                            [type]="showPassword ? 'text' : 'password'" 
+                            [type]="showPassword() ? 'text' : 'password'" 
                             formControlName="confirmPassword" 
-                            (input)="clearError()" 
+                            (focus)="clearError()" 
                             placeholder="Repeat your password">
                     </div>
                 </div>
 
-                @if (errorMessage) {
+                @if (errorMessage()) {
                     <div class="error-message">
-                        {{ errorMessage }}
+                        {{ errorMessage() }}
                     </div>
                 }
 

@@ -12,18 +12,18 @@
                 <label>Password</label>
                 <div class="password-wrapper">
                     <input 
-                        [type]="showPassword ? 'text' : 'password'" 
+                        [type]="showPassword() ? 'text' : 'password'" 
                         formControlName="password" 
-                        (input)="clearError()"
+                        (focus)="clearError()"
                         placeholder="Enter your password">
                     
-                    <button type="button" (click)="togglePassword()" class="btn-eye"> <mat-icon style="color: white;">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+                    <button type="button" (click)="togglePassword()" class="btn-eye"> <mat-icon style="color: white;">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon></button>
                 </div>
             </div>
 
-            @if (errorMessage) {
+            @if (errorMessage()) {
                 <div class="error-message">
-                    {{ errorMessage }}
+                    {{ errorMessage() }}
                 </div>
             }
 

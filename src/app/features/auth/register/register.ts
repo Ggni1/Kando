@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -16,10 +16,11 @@ export class Register {
   // Inject se usa para obtener instancias sin tener que usar el constructor.
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  
 
-  errorMessage = '';
-  registrationSuccess = false;
-  showPassword = false;
+  errorMessage = signal('');
+  registrationSuccess = signal(false);
+  showPassword = signal(false);
 
   form = this.fb.group({
     //Validators se usan para validar los campos del formulario.
@@ -29,31 +30,31 @@ export class Register {
   });
 
   clearError() {
-    if (this.errorMessage) {
-      this.errorMessage = '';
+    if (this.errorMessage()) {
+      this.errorMessage.set('');
     }
   }
 
   togglePassword() {
-    this.showPassword = !this.showPassword;
+    this.showPassword.update(value => !value);
   }
 
   async onSubmit() {
-    this.errorMessage = '';
+    this.errorMessage.set('');
     const { email, password, confirmPassword } = this.form.value;
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      setTimeout(() => { this.errorMessage = 'Please fill in all fields correctly.';}, 10);
+      setTimeout(() => { this.errorMessage.set('Please fill in all fields correctly.');}, 10);
     } else if (password !== confirmPassword) {
-      setTimeout(() => { this.errorMessage = 'Passwords do not match.';}, 10);
+      setTimeout(() => { this.errorMessage.set('Passwords do not match.');}, 10);
     } else {
       try {
         await this.authService.signUp(email!, password!);
-        this.registrationSuccess = true;
+        this.registrationSuccess.set(true);
       } catch (error: any) {
         console.log(error.message);
-        setTimeout(() => { this.errorMessage = 'Registration failed. Please try again.';}, 10);
+        setTimeout(() => { this.errorMessage.set('Registration failed. Please try again.');}, 10);
       }
     } 
   }
