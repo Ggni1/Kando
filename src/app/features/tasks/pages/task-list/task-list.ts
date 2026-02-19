@@ -20,13 +20,13 @@ export class TaskList implements OnInit {
     private taskService = inject(TaskService);
     public authService = inject(AuthService);
 
-    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     tasks = signal<Task[]>([]);
     usernames = signal<Map<string, string>>(new Map());
     loading = signal(true);
     searchFilter = signal('');
     errorMessage = signal('');
 
+    readonly isGuest = computed(() => this.authService.userRole() === 'guest');
     readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
     readonly filteredTasks = computed(() => {
         const filter = this.searchFilter().toLowerCase();

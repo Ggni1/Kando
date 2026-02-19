@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
@@ -23,13 +23,14 @@ export class TaskEdit implements OnInit {
     private router = inject(Router);
     private route = inject(ActivatedRoute);
 
-    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     task = signal<Task | null>(null);
     username = signal<string>('');
     loading = signal(true);
     submitting = signal(false);
     errorMessage = signal('');
     successMessage = signal('');
+
+    readonly isGuest = computed(() => this.authService.userRole() === 'guest');
 
     form = this.fb.group({
         title: ['', [Validators.required, Validators.minLength(3)]],

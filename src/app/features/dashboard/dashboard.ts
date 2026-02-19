@@ -23,7 +23,6 @@ export class Dashboard implements OnInit {
   public authService = inject(AuthService);
   private router = inject(Router);
   
-  isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
   columns = signal<Column[]>([]);
 
   activeColumnID = signal<number | null>(null);
@@ -45,6 +44,7 @@ export class Dashboard implements OnInit {
   confirmMessage = signal<string>('');
   confirmAction: (() => Promise<void>) | null = null;
   
+  readonly isGuest = computed(() => this.authService.userRole() === 'guest');
   readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
   readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null);
   readonly filteredColumns = computed(() => {

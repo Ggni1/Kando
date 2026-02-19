@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { Footer } from '../../../../shared/components/footer/footer';
 import { Task } from '../../../../core/models/board';
 import { TaskService } from '../../../../core/services/task.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { supabase } from '../../../../core/services/supabase';
 
 @Component({
@@ -17,12 +18,14 @@ import { supabase } from '../../../../core/services/supabase';
 export class TaskDetail implements OnInit {
     private taskService = inject(TaskService);
     private route = inject(ActivatedRoute);
+    public authService = inject(AuthService);
 
-    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     task = signal<Task | null>(null);
     username = signal<string>('');
     loading = signal(true);
     errorMessage = signal('');
+
+    readonly isGuest = computed(() => this.authService.userRole() === 'guest');
 
     async ngOnInit() {
         const id = this.route.snapshot.params['id'];

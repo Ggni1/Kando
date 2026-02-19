@@ -15,6 +15,17 @@ export class AuthService {
      * ES: Inicializa los listeners del estado de autenticacion.
      */
     constructor() {
+        // EN: Check if guest mode is active (takes priority over authenticated session).
+        // ES: Verifica si el modo invitado está activo (tiene prioridad sobre sesión autenticada).
+        if (sessionStorage.getItem('kando.guest') === 'true') {
+            this.currentUser.set(null);
+            this.userRole.set('guest');
+            this.profileUsername.set('Guest');
+            // Force logout from Supabase to clear authenticated session
+            supabase.auth.signOut();
+            return;
+        }
+
         supabase.auth.getSession().then(({ data }) => {
             this.currentUser.set(data.session?.user || null);
             if (data.session?.user) {
@@ -79,6 +90,22 @@ export class AuthService {
         this.userRole.set('user');
         this.storeToken(null);
         this.router.navigate(['/login']);
+    }
+
+    /* EN: Login as guest with limited permissions (closes previous session).
+     * ES: Inicia sesion como invitado con permisos limitados (cierra sesion anterior).
+     */
+    async loginAsGuest() {
+        // Logout from Supabase to clear authenticated session
+        await supabase.auth.signOut();
+        // Clean previous authenticated session
+        this.currentUser.set(null);
+        this.userRole.set('guest');
+        this.profileUsername.set('Guest');
+        this.storeToken(null);
+        // Set guest session flags (takes priority on page reload)
+        sessionStorage.setItem('kando.guest', 'true');
+        sessionStorage.setItem('kando.user_role', 'guest');
     }
 
     /* EN: Fetch user role and profile username.

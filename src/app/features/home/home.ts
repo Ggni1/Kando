@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Footer } from '../../shared/components/footer/footer';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -13,13 +14,13 @@ import { Footer } from '../../shared/components/footer/footer';
 })
 export class Home {
     private router = inject(Router);
+    private authService = inject(AuthService);
 
     /* EN: Login as guest with limited permissions (session-only).
      * ES: Inicia sesión como invitado con permisos limitados (solo sesión).
      */
-    loginAsGuest() {
-        sessionStorage.setItem('kando.guest', 'true');
-        sessionStorage.setItem('kando.user_role', 'guest');
+    async loginAsGuest() {
+        await this.authService.loginAsGuest();
         this.router.navigate(['/dashboard']);
     }
 }

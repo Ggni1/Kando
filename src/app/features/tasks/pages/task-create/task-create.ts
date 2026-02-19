@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
@@ -20,10 +20,11 @@ export class TaskCreate {
     public authService = inject(AuthService);
     private router = inject(Router);
 
-    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     loading = signal(false);
     errorMessage = signal('');
     successMessage = signal('');
+
+    readonly isGuest = computed(() => this.authService.userRole() === 'guest');
 
     form = this.fb.group({
         title: ['', [Validators.required, Validators.minLength(3)]],

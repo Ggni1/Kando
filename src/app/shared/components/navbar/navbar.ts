@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class Navbar {
   public authService = inject(AuthService);
-  isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
+  readonly isGuest = computed(() => this.authService.userRole() === 'guest');
   readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
 
   /* EN: Sign out the current user and clear guest flag.
@@ -20,7 +20,6 @@ export class Navbar {
    */
   logout() {
     sessionStorage.removeItem('kando.guest');
-    this.isGuest.set(false);
     this.authService.signOut();
   }
 }
