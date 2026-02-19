@@ -1,0 +1,70 @@
+<div class="task-edit-layout">
+    <app-navbar></app-navbar>
+
+    <main class="edit-container">
+        <a routerLink="/tasks" class="btn-back">← Back to Tasks</a>
+
+        @if (errorMessage()) {
+            <div class="error-notification">{{ errorMessage() }}</div>
+        }
+        @if (successMessage()) {
+            <div class="success-notification">{{ successMessage() }}</div>
+        }
+
+        @if (loading()) {
+            <div class="loading">Loading task...</div>
+        } @else {
+            @if (task(); as t) {
+                <div class="edit-card">
+                    <h1>Edit Task</h1>
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="task-form">
+                        <div class="form-group">
+                            <label for="title">Title <span class="required">*</span></label>
+                            <input 
+                                id="title"
+                                type="text"
+                                formControlName="title"
+                                placeholder="Enter task title"
+                                class="form-input" />
+                            @if (form.get('title')?.invalid && form.get('title')?.touched) {
+                                <span class="error">Title is required (min. 3 characters)</span>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tag">Tag</label>
+                            <input 
+                                id="tag"
+                                type="text"
+                                formControlName="tag"
+                                placeholder="e.g: urgent, important"
+                                class="form-input" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="columnId">Column <span class="required">*</span></label>
+                            <select formControlName="columnId" class="form-input">
+                                <option value="1">Column 1</option>
+                                <option value="2">Column 2</option>
+                                <option value="3">Column 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit" [disabled]="submitting()">
+                                {{ submitting() ? 'Saving...' : 'Save Changes' }}
+                            </button>
+                            <a routerLink="/tasks" class="btn-cancel">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            } @else {
+                <div class="no-task">
+                    <p>Task not found</p>
+                </div>
+            }
+        }
+    </main>
+
+    <app-footer></app-footer>
+</div>

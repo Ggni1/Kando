@@ -4,9 +4,6 @@
     <main class="board-container">
         <header class="board-header">
         <div class="view-controls">
-            @if (isAdmin()) {
-                <span class="badge-admin">ADMIN MODE</span>
-            }
             <div class="view-title">
                 @if (isEditingBoardTitle()) {
                     <input
@@ -30,11 +27,16 @@
                 placeholder="Filter by keyword..."
                 [ngModel]="searchFilter()"
                 (ngModelChange)="searchFilter.set($event)" />
-            @if (isAdmin()) {
-                <button class="btn-add-column-header" (click)="addColumn()" title="Add new column">
-                    <span class="plus">+</span> Add column
-                </button>
-            }
+            <div class="header-actions">
+                @if (isAdmin()) {
+                    <button class="btn-add-column-header" (click)="addColumn()" title="Add new column">
+                        <span class="plus">+</span> Add column
+                    </button>
+                    <a routerLink="/tasks/create" class="btn-create-task-header" title="Create task">
+                        <span class="plus">+</span> Create Task
+                    </a>
+                }
+            </div>
         </div>
         </header>
 
@@ -133,6 +135,9 @@
                     <div class="card-footer">
                         <span class="task-username">{{ getUserUsername(task.user_id) }}</span>
                         <div class="card-actions">
+                            <a [routerLink]="'/tasks/' + task.id" class="btn-view-detail" title="View details">
+                                <mat-icon>visibility</mat-icon>
+                            </a>
                             @if (isAdmin() || task.user_id === currentUserId()) {
                                 <button class="btn-card-menu" (click)="toggleTaskMenu(task)" title="Options">
                                     <mat-icon>more_vert</mat-icon>
@@ -140,10 +145,10 @@
                                 @if (activeTaskMenu() === task.id) {
                                     <div class="task-menu-overlay" (click)="activeTaskMenu.set(null)"></div>
                                     <div class="task-menu">
-                                        <button (click)="enableEditTask(task)" class="menu-item">
+                                        <a [routerLink]="'/tasks/' + task.id + '/edit'" class="menu-item" (click)="activeTaskMenu.set(null)">
                                             <mat-icon>edit</mat-icon>
                                             Edit
-                                        </button>
+                                        </a>
                                         <button (click)="deleteTaskHandler(task)" class="menu-item delete">
                                             <mat-icon>delete</mat-icon>
                                             Delete
@@ -181,19 +186,7 @@
         </div>
 
         @if (editingTaskId() !== null) {
-            <div class="edit-modal-overlay" (click)="cancelEditTask()">
-                <div class="edit-modal" (click)="$event.stopPropagation()">
-                    <h3>Edit Task</h3>
-                    <textarea
-                        [ngModel]="editingTaskTitle()"
-                        (ngModelChange)="editingTaskTitle.set($event)"
-                        class="edit-textarea"></textarea>
-                    <div class="modal-actions">
-                        <button (click)="saveEditTask()" class="btn-save">Save</button>
-                        <button (click)="cancelEditTask()" class="btn-cancel">Cancel</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Edit modal removed - use task-edit page instead -->
         }
     </main>
 

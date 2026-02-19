@@ -1,9 +1,15 @@
 <nav class="navbar">
     <div class="navbar-brand">
         <span class="logo">Kando</span>
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/tasks">Tasks</a>
     </div>
 
     <div class="navbar-user">
+        @if (isAdmin()) {
+            <span class="badge-admin">ADMIN MODE</span>
+            <a class="admin-link" routerLink="/admin/users">Administrar usuarios</a>
+        }
         <span class="user-email">
         {{ authService.profileUsername() || authService.currentUser()?.email || 'User' }}
         </span>

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer';
 import { Column, Task } from '../../core/models/board';
@@ -13,13 +14,14 @@ import { supabase } from '../../core/services/supabase';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, Navbar, Footer, DragDropModule, FormsModule, MatIconModule],
+  imports: [CommonModule, Navbar, Footer, DragDropModule, FormsModule, MatIconModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
   private taskService = inject(TaskService);
   public authService = inject(AuthService);
+  private router = inject(Router);
   
   columns = signal<Column[]>([]);
 

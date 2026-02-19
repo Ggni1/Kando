@@ -6,6 +6,7 @@ import { User } from '@supabase/supabase-js';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private router = inject(Router);
+    private readonly tokenStorageKey = 'kando.jwt';
     currentUser = signal<User | null>(null);
     userRole = signal<string>('user');
     profileUsername = signal<string>('');
@@ -25,9 +26,11 @@ export class AuthService {
             console.log('Auth state changed:', event, session);
             if (session?.user) {
                 this.fetchUserProfile(session.user.id);
+                this.storeToken(session.access_token ?? null);
             } else {
                 this.userRole.set('user');
                 this.profileUsername.set('');
+                this.storeToken(null);
             }
         });
     }
@@ -36,7 +39,7 @@ export class AuthService {
      * ES: Registra un usuario nuevo con datos de perfil.
      */
     async signUp(email: string, password: string, username: string) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -46,14 +49,23 @@ export class AuthService {
             }
         });
         if (error) throw error;
+        if (data.session?.access_token) {
+            this.storeToken(data.session.access_token);
+            this.router.navigate(['/dashboard']);
+            return;
+        }
+        await this.signIn(email, password);
     }
 
     /* EN: Sign in and redirect to the dashboard.
      * ES: Inicia sesion y redirige al dashboard.
      */
     async signIn(email: string, password: string) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        if (data.session?.access_token) {
+            this.storeToken(data.session.access_token);
+        }
         this.router.navigate(['/dashboard']);
     }
 
@@ -65,6 +77,7 @@ export class AuthService {
         if (error) throw error;
         this.currentUser.set(null);
         this.userRole.set('user');
+        this.storeToken(null);
         this.router.navigate(['/login']);
     }
 
@@ -85,6 +98,17 @@ export class AuthService {
             }
         } catch (error) {
             console.error('Error fetching role:', error);
+        }
+    }
+
+    /* EN: Store or clear the JWT token in local storage.
+     * ES: Guarda o elimina el token JWT en el almacenamiento local.
+     */
+    private storeToken(token: string | null) {
+        if (token) {
+            localStorage.setItem(this.tokenStorageKey, token);
+        } else {
+            localStorage.removeItem(this.tokenStorageKey);
         }
     }
 }

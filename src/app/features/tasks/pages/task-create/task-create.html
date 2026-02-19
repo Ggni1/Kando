@@ -1,0 +1,60 @@
+<div class="task-create-layout">
+    <app-navbar></app-navbar>
+
+    <main class="create-container">
+        <a routerLink="/tasks" class="btn-back">← Back to Tasks</a>
+
+        @if (errorMessage()) {
+            <div class="error-notification">{{ errorMessage() }}</div>
+        }
+        @if (successMessage()) {
+            <div class="success-notification">{{ successMessage() }}</div>
+        }
+
+        <div class="create-card">
+            <h1>Create New Task</h1>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="task-form">
+                <div class="form-group">
+                    <label for="title">Title <span class="required">*</span></label>
+                    <input 
+                        id="title"
+                        type="text"
+                        formControlName="title"
+                        placeholder="Enter task title"
+                        class="form-input" />
+                    @if (form.get('title')?.invalid && form.get('title')?.touched) {
+                        <span class="error">Title is required (min. 3 characters)</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="tag">Tag</label>
+                    <input 
+                        id="tag"
+                        type="text"
+                        formControlName="tag"
+                        placeholder="e.g: urgent, important"
+                        class="form-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="columnId">Column <span class="required">*</span></label>
+                    <select formControlName="columnId" class="form-input">
+                        <option value="1">Column 1</option>
+                        <option value="2">Column 2</option>
+                        <option value="3">Column 3</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" [disabled]="loading()">
+                        {{ loading() ? 'Creating...' : 'Create Task' }}
+                    </button>
+                    <a routerLink="/tasks" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <app-footer></app-footer>
+</div>

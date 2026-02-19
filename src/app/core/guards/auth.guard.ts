@@ -12,6 +12,8 @@ export const authGuard = () => {
 
     if (authService.currentUser()) {
       hasCurrentUser = true;
+    } else if (localStorage.getItem('kando.jwt')) {
+      hasCurrentUser = true;
     } else{
     router.navigate(['/login']);
     }
