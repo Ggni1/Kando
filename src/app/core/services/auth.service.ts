@@ -32,9 +32,17 @@ export class AuthService {
         });
     }
     
-    // Método para registrar un nuevo usuario con email y password. Redirige al login si el registro es exitoso.
-    async signUp(email: string, password: string) {
-        const { error } = await supabase.auth.signUp({ email, password });
+    // Método para registrar un nuevo usuario con email, password, username. Redirige al login si el registro es exitoso.
+    async signUp(email: string, password: string, username: string) {
+        const { error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+              data: {
+                  username: username
+              }
+          }
+      });
         if (error) throw error;
     }
 

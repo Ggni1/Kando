@@ -27,6 +27,7 @@ export class Register {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
   });
 
   clearError() {
@@ -41,7 +42,7 @@ export class Register {
 
   async onSubmit() {
     this.errorMessage.set('');
-    const { email, password, confirmPassword } = this.form.value;
+    const { email, password, confirmPassword, username } = this.form.value;
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -50,7 +51,7 @@ export class Register {
       setTimeout(() => { this.errorMessage.set('Passwords do not match.');}, 10);
     } else {
       try {
-        await this.authService.signUp(email!, password!);
+        await this.authService.signUp(email!, password!, username!);
         this.registrationSuccess.set(true);
       } catch (error: any) {
         console.log(error.message);
