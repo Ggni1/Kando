@@ -1,6 +1,3 @@
-import { UrlCodec } from "@angular/common/upgrade";
-import { version } from "typescript";
-
 export const Ctes = {
     supabase:{
         url: 'https://imawpbvponmtvaeemkms.supabase.co',

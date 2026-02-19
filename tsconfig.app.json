@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/.env/Ctes.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

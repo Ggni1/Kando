@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
-import { Ctes } from '../../shared/Ctes'; 
+import { Ctes } from '../../.env/Ctes'; 
 import { Column, Task } from '../models/board'; 
 
 @Injectable({
