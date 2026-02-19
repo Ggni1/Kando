@@ -1,0 +1,43 @@
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--auth-card-color);
+  color: var(--text-color);
+  flex-shrink: 0;
+}
+
+.footer-spacer {
+  width: 32px;
+}
+
+.footer-center {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+}
+
+.footer-link {
+  color: var(--muted-text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--text-color);
+  background-color: rgba(255,255,255,0.05);
+}
+
+.github-icon {
+  width: 20px;
+  height: 20px;
+}

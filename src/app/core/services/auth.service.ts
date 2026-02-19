@@ -12,12 +12,13 @@ export class AuthService {
     // Signal para almacenar el usuario actual. Se actualiza automáticamente cuando cambia el estado de autenticación
     currentUser = signal<User | null>(null);
     userRole = signal<string>('user');
+    profileUsername = signal<string>('');
     constructor() {
         // Recupera sesion al iniciar la aplicación para mantener al usuario logueado si ya tiene una sesión activa
         supabase.auth.getSession().then(({ data }) => {
             this.currentUser.set(data.session?.user || null);
             if (data.session?.user) {
-                this.fetchUserRole(data.session.user.id);
+                this.fetchUserProfile(data.session.user.id);
             }
         });
         // Cambia el estado del usuario cada vez que hay un cambio en la autenticación
@@ -25,9 +26,10 @@ export class AuthService {
             this.currentUser.set(session?.user || null);
             console.log('Auth state changed:', event, session);
             if (session?.user) {
-                this.fetchUserRole(session.user.id);
+                this.fetchUserProfile(session.user.id);
             } else {
                 this.userRole.set('user'); // Si se va, reseteamos a user normal
+                this.profileUsername.set('');
             }
         });
     }
@@ -64,16 +66,17 @@ export class AuthService {
         this.router.navigate(['/login']);
     }  
 
-    async fetchUserRole(userId: string) {
+    async fetchUserProfile(userId: string) {
         try {
             const { data } = await supabase
                 .from('profiles')
-                .select('role')
+                .select('role, username, email')
                 .eq('id', userId)
                 .single();
             
             if (data) {
-                this.userRole.set(data.role);
+                this.userRole.set(data.role || 'user');
+                this.profileUsername.set(data.username || data.email || '');
             }
         } catch (error) {
             console.error('Error fetching role:', error);

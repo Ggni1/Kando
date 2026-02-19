@@ -5,7 +5,7 @@
 
     <div class="navbar-user">
         <span class="user-email">
-        {{ authService.currentUser()?.email || 'Usuario' }}
+        {{ authService.profileUsername() || authService.currentUser()?.email || 'User' }}
         </span>
         <button (click)="logout()" class="btn-logout">Log out</button>
     </div>
