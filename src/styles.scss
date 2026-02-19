@@ -6,14 +6,16 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
 html {
   height: 100%;
   @include mat.theme((
     color: (
-      primary: mat.$magenta-palette,
-      tertiary: mat.$violet-palette,
+      primary: mat.$amber-palette,
+      tertiary: mat.$yellow-palette,
     ),
-    typography: Roboto,
+    typography: Sora,
     density: 0,
   ));
 }
@@ -22,13 +24,13 @@ body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
   // user's system settings.
-  color-scheme: light;
+  color-scheme: dark;
 
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: var(--background-color);
+  color: var(--text-color);
   font: var(--mat-sys-body-medium);
 
   // Reset the user agent margin.
@@ -37,39 +39,39 @@ body {
 }
 :root { 
     // Primary colors
-    --primary-color: #ebdd22; 
-    --secondary-color: #8600fb;
-    --background-color: #242933; 
+    --primary-color: #f4c542; 
+    --secondary-color: #c89d2a;
+    --background-color: #17181c; 
     --error-color: #991b1b;
-    --text-color: #ebe3e3;
-  --surface-color: #1f2937;
-  --panel-color: #374151;
-  --border-color: #4b5563;
-  --muted-text: #9ca3af;
-  --muted-text-strong: #d1d5db;
-  --scroll-thumb: #5a5a5c;
-  --shadow-color: rgba(0, 0, 0, 0.2);
-  --badge-bg: rgba(255, 255, 255, 0.1);
-  --hover-bg: rgba(255, 255, 255, 0.03);
+    --text-color: #f3f2ee;
+  --surface-color: #1d1f26;
+  --panel-color: #2a2d36;
+  --border-color: #3a3e49;
+  --muted-text: #9aa0a6;
+  --muted-text-strong: #cdd3d8;
+  --scroll-thumb: #4c4f58;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --badge-bg: rgba(244, 197, 66, 0.15);
+  --hover-bg: rgba(255, 255, 255, 0.04);
     
     // Login & Register
-    --auth-card-color: #1f1f25;
-    --auth-card-shadow: rgba(0, 0, 0, 0.05);
-    --auth-input-border: #d8a006;
-    --auth-focus-shadow: #c39004;
-    --auth-button-hover: #492568;
-    --auth-secondary-text: #9ca3af;
-    --auth-bg-color: #3b3b48;
+    --auth-card-color: #1c1e25;
+    --auth-card-shadow: rgba(0, 0, 0, 0.4);
+    --auth-input-border: #f4c542;
+    --auth-focus-shadow: #d9a530;
+    --auth-button-hover: #2f2a1a;
+    --auth-secondary-text: #a6abb2;
+    --auth-bg-color: #1a1c22;
 
     // Cards
-    --task-card-bg: #5a5a5e;
-    --task-card-hover: #636369;
+    --task-card-bg: #2f333d;
+    --task-card-hover: #353a45;
 } 
 
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Inter', sans-serif;
+  font-family: 'Sora', sans-serif;
     background-color: var(--background-color);
     // Fuente nitida
     -webkit-font-smoothing: antialiased; 

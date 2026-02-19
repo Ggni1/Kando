@@ -85,4 +85,14 @@ export class TaskService {
 
         if (error) throw error;
     }
+
+    // Actualizar posición de columna
+    async updateColumnPosition(columnId: number, position: number) {
+        const { error } = await this.supabase
+        .from('columns')
+        .update({ position })
+        .eq('id', columnId);
+
+        if (error) throw error;
+    }
 }

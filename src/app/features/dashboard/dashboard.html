@@ -24,13 +24,39 @@
                     }
                 }
             </div>
-            <div class="search-bar">Filter by keyword...</div>
+            <input 
+                class="search-bar" 
+                type="text"
+                placeholder="Filter by keyword..."
+                [ngModel]="searchFilter()"
+                (ngModelChange)="searchFilter.set($event)" />
+            @if (isAdmin()) {
+                <button class="btn-add-column-header" (click)="addColumn()" title="Add new column">
+                    <span class="plus">+</span> Add column
+                </button>
+            }
         </div>
         </header>
-        
+
+        @if (errorMessage()) {
+            <div class="error-notification">{{ errorMessage() }}</div>
+        }
+
+        @if (showConfirmModal()) {
+            <div class="confirm-modal-overlay">
+                <div class="confirm-modal">
+                    <p class="confirm-message">{{ confirmMessage() }}</p>
+                    <div class="confirm-actions">
+                        <button class="btn-confirm-delete" (click)="confirmDelete()">Delete</button>
+                        <button class="btn-confirm-cancel" (click)="closeConfirmModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="board-columns" cdkDropListGroup>
         
-        @for (column of columns(); track column.id) {
+        @for (column of filteredColumns(); track column.id) {
             <div class="column">
             <div class="column-header">
                 <div class="header-title">
@@ -42,12 +68,48 @@
                         'backlog': column.status === 'backlog'
                         }">
                 </span>
-                <h3>{{ column.title }}</h3>
+                @if (editingColumnId() === column.id) {
+                    <input 
+                        class="column-title-input"
+                        type="text"
+                        [ngModel]="columnNameDraft()"
+                        (ngModelChange)="columnNameDraft.set($event)"
+                        (keyup.enter)="saveColumnName(column)" />
+                } @else {
+                    <h3 [class.editable]="isAdmin()" (click)="enableEditColumnName(column)">{{ column.title }}</h3>
+                }
                 <span class="task-count">{{ column.tasks.length }}</span>
                 </div>
                 
                 @if (isAdmin()) {
-                    <button class="btn-options">...</button>
+                    @if (editingColumnId() === column.id) {
+                        <div class="column-edit-actions">
+                            <button class="btn-save-column" (click)="saveColumnName(column)" title="Save">
+                                <mat-icon>check</mat-icon>
+                            </button>
+                            <button class="btn-cancel-column" (click)="cancelEditColumnName()" title="Cancel">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    } @else {
+                        <div class="column-move-actions">
+                            <button class="btn-move-column" 
+                                    (click)="moveColumnUp(column)" 
+                                    [disabled]="getColumnIndex(column.id) === 0"
+                                    title="Move left">
+                                <mat-icon>arrow_left</mat-icon>
+                            </button>
+                            <button class="btn-move-column" 
+                                    (click)="moveColumnDown(column)" 
+                                    [disabled]="getColumnIndex(column.id) === columns().length - 1"
+                                    title="Move right">
+                                <mat-icon>arrow_right</mat-icon>
+                            </button>
+                            <button class="btn-delete-column" (click)="deleteColumn(column)" title="Delete column">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    }
                 }
             </div>
             
@@ -69,15 +131,14 @@
                     <p class="task-title">{{ task.title }}</p>
                     
                     <div class="card-footer">
-                        @if (task.user_id === currentUserId()) {
-                            <span class="owner-badge">You</span>
-                        }
+                        <span class="task-username">{{ getUserUsername(task.user_id) }}</span>
                         <div class="card-actions">
                             @if (isAdmin() || task.user_id === currentUserId()) {
                                 <button class="btn-card-menu" (click)="toggleTaskMenu(task)" title="Options">
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 @if (activeTaskMenu() === task.id) {
+                                    <div class="task-menu-overlay" (click)="activeTaskMenu.set(null)"></div>
                                     <div class="task-menu">
                                         <button (click)="enableEditTask(task)" class="menu-item">
                                             <mat-icon>edit</mat-icon>
@@ -98,14 +159,14 @@
     
             @if (activeColumnID() === column.id) {
                 <div class="add-task-form">
-                    <div class="add-task-row">
-                        <input
-                            [ngModel]="newTaskTitle()"
-                            (ngModelChange)="newTaskTitle.set($event)"
-                            (keyup.enter)="onAddTask(column)"
-                            class="task-input-line"
-                            type="text"
-                            placeholder="Write a title..." />
+                    <input
+                        [ngModel]="newTaskTitle()"
+                        (ngModelChange)="newTaskTitle.set($event)"
+                        (keyup.enter)="onAddTask(column)"
+                        class="task-input-line"
+                        type="text"
+                        placeholder="Write a title..." />
+                    <div class="add-task-buttons">
                         <button (click)="onAddTask(column)" class="btn-save">Add</button>
                         <button (click)="cancelAddTask()" class="btn-cancel">Cancel</button>
                     </div>
