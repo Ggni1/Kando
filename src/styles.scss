@@ -12,8 +12,8 @@ html {
   height: 100%;
   @include mat.theme((
     color: (
-      primary: mat.$amber-palette,
-      tertiary: mat.$yellow-palette,
+      primary: mat.$yellow-palette,
+      tertiary: mat.$orange-palette,
     ),
     typography: Sora,
     density: 0,
@@ -53,6 +53,28 @@ body {
   --shadow-color: rgba(0, 0, 0, 0.4);
   --badge-bg: rgba(244, 197, 66, 0.15);
   --hover-bg: rgba(255, 255, 255, 0.04);
+  --white: #ffffff;
+  --off-white: #e5e7eb;
+  --text-on-accent: #111111;
+  --accent-yellow-strong: #fbbf24;
+  --accent-yellow-08: rgba(255, 215, 0, 0.08);
+  --accent-yellow-10: rgba(255, 215, 0, 0.1);
+  --accent-yellow-15: rgba(255, 215, 0, 0.15);
+  --white-04: rgba(255, 255, 255, 0.04);
+  --white-05: rgba(255, 255, 255, 0.05);
+  --white-10: rgba(255, 255, 255, 0.1);
+  --overlay-50: rgba(0, 0, 0, 0.5);
+  --overlay-60: rgba(0, 0, 0, 0.6);
+  --shadow-40: rgba(0, 0, 0, 0.4);
+  --shadow-50: rgba(0, 0, 0, 0.5);
+  --danger-color-strong: #dc2626;
+  --danger-10: rgba(239, 68, 68, 0.1);
+  --danger-30: rgba(239, 68, 68, 0.3);
+  --danger-40: rgba(239, 68, 68, 0.4);
+  --neutral-500: #6b7280;
+  --neutral-20: rgba(107, 114, 128, 0.2);
+  --neutral-30: rgba(107, 114, 128, 0.3);
+  --panel-preview: #2d333b;
     
     // Login & Register
     --auth-card-color: #1c1e25;
