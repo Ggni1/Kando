@@ -24,16 +24,25 @@ export class Login {
     password: ['', [Validators.required]],
   });
 
+  /* EN: Clear the current error message.
+   * ES: Limpia el mensaje de error actual.
+   */
   clearError() {
     if (this.errorMessage()) {
       this.errorMessage.set('');
     }
   }
+
+  /* EN: Toggle password visibility.
+   * ES: Alterna la visibilidad de la contrasena.
+   */
   togglePassword() {
     this.showPassword.update(value => !value);
   }
 
-
+  /* EN: Submit the login form.
+   * ES: Envia el formulario de inicio de sesion.
+   */
   async onSubmit() {
     this.errorMessage.set('');
     const { email, password } = this.form.value;

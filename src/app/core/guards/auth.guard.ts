@@ -2,16 +2,17 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
+/* EN: Check auth state and redirect to login if needed.
+ * ES: Verifica el estado y redirige al login si es necesario.
+ */
 export const authGuard = () => {
     const authService = inject(AuthService);
     const router = inject(Router);
     let hasCurrentUser = false;
 
-    // Verificamos si hay un current user
     if (authService.currentUser()) {
       hasCurrentUser = true;
     } else{
-    // Si no hay un current user, redirigimos al login
     router.navigate(['/login']);
     }
 

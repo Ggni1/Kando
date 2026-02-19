@@ -9,10 +9,15 @@ import { Column, Task } from '../models/board';
 export class TaskService {
     private supabase: SupabaseClient;
 
+    /* EN: Initialize Supabase client.
+     * ES: Inicializa el cliente de Supabase.
+     */
     constructor() {
         this.supabase = createClient(Ctes.supabase.url, Ctes.supabase.anonKey);
     }
-    // Obtener tareas por posicion
+    /* EN: Fetch columns ordered by position.
+     * ES: Obtiene columnas ordenadas por posicion.
+     */
     async getColumns() {
         const { data, error } = await this.supabase
         .from('columns')
@@ -22,7 +27,9 @@ export class TaskService {
         if (error) throw error;
         return data as Column[];
     }
-    // Obtener tareas por fecha creacion
+    /* EN: Fetch tasks ordered by creation date.
+     * ES: Obtiene tareas ordenadas por fecha de creacion.
+     */
     async getTasks() {
         const { data, error } = await this.supabase
         .from('tasks')
@@ -32,7 +39,9 @@ export class TaskService {
         if (error) throw error;
         return data as Task[];
     }
-    // Crear nueva tarea
+    /* EN: Create a new task in a column.
+     * ES: Crea una tarea nueva en una columna.
+     */
     async createTask(title: string, columnId: number, tag?: string) {
         const { data, error } = await this.supabase
         .from('tasks')
@@ -47,7 +56,9 @@ export class TaskService {
         if (error) throw error;
         return data as Task;
     }
-    // Mover tarea
+    /* EN: Move a task to a different column.
+     * ES: Mueve una tarea a otra columna.
+     */
     async updateTaskColumn(taskId: number, newColumnId: number) {
         const { error } = await this.supabase
         .from('tasks')
@@ -57,7 +68,9 @@ export class TaskService {
         if (error) throw error;
     }
 
-    // Actualizar tarea
+    /* EN: Update task fields.
+     * ES: Actualiza campos de la tarea.
+     */
     async updateTask(taskId: number, updates: Partial<Pick<Task, 'title' | 'tag' | 'column_id'>>) {
         const { error } = await this.supabase
         .from('tasks')
@@ -67,7 +80,9 @@ export class TaskService {
         if (error) throw error;
     }
 
-    // Eliminar tarea
+    /* EN: Delete a task by id.
+     * ES: Elimina una tarea por id.
+     */
     async deleteTask(taskId: number) {
         const { error } = await this.supabase
         .from('tasks')
@@ -77,6 +92,9 @@ export class TaskService {
         if (error) throw error;
     }
     
+    /* EN: Update task status field.
+     * ES: Actualiza el estado de la tarea.
+     */
     async updateTaskStatus(id: string, newStatus: string) {
         const { error } = await this.supabase
         .from('tasks')
@@ -86,7 +104,9 @@ export class TaskService {
         if (error) throw error;
     }
 
-    // Actualizar posición de columna
+    /* EN: Update column position value.
+     * ES: Actualiza la posicion de una columna.
+     */
     async updateColumnPosition(columnId: number, position: number) {
         const { error } = await this.supabase
         .from('columns')

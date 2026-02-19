@@ -37,8 +37,7 @@ export class Dashboard implements OnInit {
   userProfiles = signal<Map<string, { username: string }>>(new Map());
   editingColumnId = signal<number | null>(null);
   columnNameDraft = signal<string>('');
-  
-  // Modal de confirmación
+
   showConfirmModal = signal<boolean>(false);
   confirmMessage = signal<string>('');
   confirmAction: (() => Promise<void>) | null = null;
@@ -57,12 +56,18 @@ export class Dashboard implements OnInit {
   
   private readonly boardTitleStorageKey = 'kando.boardTitle';
 
+  /* EN: Initialize board data on component load.
+   * ES: Inicializa los datos del tablero al cargar el componente.
+   */
   async ngOnInit() {
     this.loadBoardTitle();
     await this.loadBoard();
     await this.loadUserProfiles();
   }
 
+  /* EN: Load board title from local storage.
+   * ES: Carga el titulo del tablero desde el almacenamiento local.
+   */
   loadBoardTitle() {
     const storedTitle = localStorage.getItem(this.boardTitleStorageKey);
     if (storedTitle) {
@@ -70,6 +75,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Load user profiles for task display.
+   * ES: Carga perfiles de usuario para mostrar en las tareas.
+   */
   async loadUserProfiles() {
     try {
       const { data, error } = await supabase.from('profiles').select('id, username');
@@ -85,24 +93,31 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Get username for a given user id.
+   * ES: Obtiene el nombre de usuario para un id dado.
+   */
   getUserUsername(userId: string): string {
     return this.userProfiles()?.get(userId)?.username || 'Unknown';
   }
 
+  /* EN: Show a temporary error message.
+   * ES: Muestra un mensaje de error temporal.
+   */
   showError(message: string) {
     this.errorMessage.set(message);
     setTimeout(() => this.errorMessage.set(''), 4000);
   }
   
+  /* EN: Load columns and tasks from the backend.
+   * ES: Carga columnas y tareas desde el backend.
+   */
   async loadBoard() {
     try {
-      // Simultaneous loading of columns and tasks
       const [dbColumns, tasks] = await Promise.all([
         this.taskService.getColumns(),
         this.taskService.getTasks()
       ]);
 
-      // Map tasks to their corresponding columns
       if (dbColumns && dbColumns.length > 0) {
       const mappedColumns = dbColumns.map(col => ({ ...col, tasks: tasks ? tasks.filter(task => task.column_id === col.id) : [] }));
       this.columns.set(mappedColumns);
@@ -112,16 +127,25 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Open the add-task input for a column.
+   * ES: Abre el input de agregar tarea para una columna.
+   */
   enableAddTask(columnId: number) {
     this.activeColumnID.set(columnId);
     this.newTaskTitle.set('');
   }
 
+  /* EN: Cancel adding a new task.
+   * ES: Cancela la creacion de una tarea nueva.
+   */
   cancelAddTask() {
     this.activeColumnID.set(null);
     this.newTaskTitle.set('');
   }
 
+  /* EN: Toggle the task context menu.
+   * ES: Alterna el menu contextual de tarea.
+   */
   toggleTaskMenu(task: Task) {
     if (this.activeTaskMenu() === task.id) {
       this.activeTaskMenu.set(null);
@@ -130,6 +154,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Enable task edit mode.
+   * ES: Habilita el modo de edicion de tarea.
+   */
   enableEditTask(task: Task) {
     if (!this.isAdmin() && task.user_id !== this.currentUserId()) return;
     this.editingTaskId.set(task.id);
@@ -138,6 +165,9 @@ export class Dashboard implements OnInit {
     this.activeTaskMenu.set(null);
   }
 
+  /* EN: Cancel task editing.
+   * ES: Cancela la edicion de la tarea.
+   */
   cancelEditTask() {
     this.editingTaskId.set(null);
     this.editingTaskTitle.set('');
@@ -145,6 +175,9 @@ export class Dashboard implements OnInit {
     this.activeTaskMenu.set(null);
   }
 
+  /* EN: Save task title changes.
+   * ES: Guarda los cambios del titulo de la tarea.
+   */
   async saveEditTask() {
     const task = this.editingTask();
     if (!task) return;
@@ -174,6 +207,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Request task deletion with confirmation.
+   * ES: Solicita la eliminacion de una tarea con confirmacion.
+   */
   async deleteTaskHandler(task: Task) {
     if (!this.isAdmin() && task.user_id !== this.currentUserId()) {
       this.showError('You can only delete your own tasks');
@@ -198,17 +234,26 @@ export class Dashboard implements OnInit {
     this.showConfirmModal.set(true);
   }
 
+  /* EN: Start editing the board title.
+   * ES: Inicia la edicion del titulo del tablero.
+   */
   startEditBoardTitle() {
     if (!this.isAdmin()) return;
     this.boardTitleDraft.set(this.boardTitle());
     this.isEditingBoardTitle.set(true);
   }
 
+  /* EN: Cancel board title editing.
+   * ES: Cancela la edicion del titulo del tablero.
+   */
   cancelEditBoardTitle() {
     this.isEditingBoardTitle.set(false);
     this.boardTitleDraft.set('');
   }
 
+  /* EN: Save board title to local storage.
+   * ES: Guarda el titulo del tablero en el almacenamiento local.
+   */
   saveBoardTitle() {
     const title = this.boardTitleDraft().trim();
     if (!title) return;
@@ -217,6 +262,9 @@ export class Dashboard implements OnInit {
     this.isEditingBoardTitle.set(false);
   }
 
+  /* EN: Create a task in the given column.
+   * ES: Crea una tarea en la columna indicada.
+   */
   async onAddTask(column: Column) { 
     const title = this.newTaskTitle().trim();
     if (!title){
@@ -229,8 +277,7 @@ export class Dashboard implements OnInit {
       this.activeColumnID.set(null);
 
       const newTask = await this.taskService.createTask(title, column.id);
-      
-      // Reload entire board to ensure consistency
+
       await this.loadBoard();
     } catch (error: any) {
       console.error('Error creating task:', error);
@@ -238,6 +285,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Handle task drag and drop updates.
+   * ES: Gestiona el arrastre y soltado de tareas.
+   */
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -258,7 +308,9 @@ export class Dashboard implements OnInit {
     }
   }
 
-  // Manejar reordenamiento de columnas
+  /* EN: Handle column reordering via drag and drop.
+   * ES: Gestiona el reordenamiento de columnas con drag and drop.
+   */
   async dropColumns(event: CdkDragDrop<Column[]>) {
     if (!this.isAdmin()) {
       this.showError('Only admins can reorder columns');
@@ -269,7 +321,6 @@ export class Dashboard implements OnInit {
       const updatedColumns = [...this.columns()];
       moveItemInArray(updatedColumns, event.previousIndex, event.currentIndex);
       
-      // Actualizar posiciones en la BD
       try {
         for (let i = 0; i < updatedColumns.length; i++) {
           await this.taskService.updateColumnPosition(updatedColumns[i].id, i);
@@ -279,12 +330,14 @@ export class Dashboard implements OnInit {
       } catch (error: any) {
         console.error('Error updating column positions:', error);
         this.showError('Failed to update column order');
-        // Recargar el estado anterior
         await this.loadBoard();
       }
     }
   }
 
+  /* EN: Request column deletion with confirmation.
+   * ES: Solicita la eliminacion de una columna con confirmacion.
+   */
   async deleteColumn(column: Column) {
     if (!this.isAdmin()) {
       this.showError('Only admins can delete columns');
@@ -296,8 +349,7 @@ export class Dashboard implements OnInit {
       try {
         const { error } = await supabase.from('columns').delete().eq('id', column.id);
         if (error) throw error;
-        
-        // Reload board after deletion
+
         await this.loadBoard();
       } catch (error: any) {
         console.error('Error deleting column:', error);
@@ -307,10 +359,16 @@ export class Dashboard implements OnInit {
     this.showConfirmModal.set(true);
   }
 
+  /* EN: Get the index of a column by id.
+   * ES: Obtiene el indice de una columna por id.
+   */
   getColumnIndex(columnId: number): number {
     return this.columns().findIndex(col => col.id === columnId);
   }
 
+  /* EN: Move a column one position up.
+   * ES: Mueve una columna una posicion arriba.
+   */
   async moveColumnUp(column: Column) {
     if (!this.isAdmin()) return;
     const currentIndex = this.getColumnIndex(column.id);
@@ -319,6 +377,9 @@ export class Dashboard implements OnInit {
     await this.swapColumnPositions(currentIndex, currentIndex - 1);
   }
 
+  /* EN: Move a column one position down.
+   * ES: Mueve una columna una posicion abajo.
+   */
   async moveColumnDown(column: Column) {
     if (!this.isAdmin()) return;
     const currentIndex = this.getColumnIndex(column.id);
@@ -327,12 +388,14 @@ export class Dashboard implements OnInit {
     await this.swapColumnPositions(currentIndex, currentIndex + 1);
   }
 
+  /* EN: Swap two column positions and persist them.
+   * ES: Intercambia dos posiciones de columnas y las persiste.
+   */
   private async swapColumnPositions(index1: number, index2: number) {
     try {
       const updatedColumns = [...this.columns()];
       [updatedColumns[index1], updatedColumns[index2]] = [updatedColumns[index2], updatedColumns[index1]];
 
-      // Actualizar posiciones en la BD
       for (let i = 0; i < updatedColumns.length; i++) {
         await this.taskService.updateColumnPosition(updatedColumns[i].id, i);
         updatedColumns[i].position = i;
@@ -345,17 +408,26 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Enable editing for a column title.
+   * ES: Habilita la edicion del titulo de una columna.
+   */
   enableEditColumnName(column: Column) {
     if (!this.isAdmin()) return;
     this.editingColumnId.set(column.id);
     this.columnNameDraft.set(column.title);
   }
 
+  /* EN: Cancel column title editing.
+   * ES: Cancela la edicion del titulo de la columna.
+   */
   cancelEditColumnName() {
     this.editingColumnId.set(null);
     this.columnNameDraft.set('');
   }
 
+  /* EN: Save a column title change.
+   * ES: Guarda el cambio de titulo de la columna.
+   */
   async saveColumnName(column: Column) {
     if (!this.isAdmin()) return;
     
@@ -380,6 +452,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Add a new column with default values.
+   * ES: Agrega una columna nueva con valores por defecto.
+   */
   async addColumn() {
     if (!this.isAdmin()) {
       this.showError('Only admins can create columns');
@@ -391,7 +466,6 @@ export class Dashboard implements OnInit {
     const statuses = ['todo', 'doing', 'done', 'backlog'];
     const status = statuses[(columnCount - 1) % statuses.length];
     
-    // Calcular la posición como el máximo actual + 1
     const maxPosition = Math.max(...this.columns().map(c => c.position || 0), 0);
     const newPosition = maxPosition + 1;
 
@@ -417,6 +491,9 @@ export class Dashboard implements OnInit {
     }
   }
 
+  /* EN: Run the pending confirm action.
+   * ES: Ejecuta la accion pendiente de confirmacion.
+   */
   async confirmDelete() {
     if (this.confirmAction) {
       await this.confirmAction();
@@ -424,6 +501,9 @@ export class Dashboard implements OnInit {
     this.closeConfirmModal();
   }
 
+  /* EN: Close and reset the confirm modal state.
+   * ES: Cierra y reinicia el estado del modal de confirmacion.
+   */
   closeConfirmModal() {
     this.showConfirmModal.set(false);
     this.confirmMessage.set('');

@@ -10,9 +10,11 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './navbar.scss',
 })
 export class Navbar {
-  // Se hace publico para poder acceder a el desde el html
   public authService = inject(AuthService);
 
+  /* EN: Sign out the current user.
+   * ES: Cierra la sesion del usuario actual.
+   */
   logout() {
     this.authService.signOut();
   }

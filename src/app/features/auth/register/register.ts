@@ -13,7 +13,6 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './register.scss'
 })
 export class Register {
-  // Inject se usa para obtener instancias sin tener que usar el constructor.
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   
@@ -23,23 +22,31 @@ export class Register {
   showPassword = signal(false);
 
   form = this.fb.group({
-    //Validators se usan para validar los campos del formulario.
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required]],
     username: ['', [Validators.required, Validators.minLength(3)]],
   });
 
+  /* EN: Clear the current error message.
+   * ES: Limpia el mensaje de error actual.
+   */
   clearError() {
     if (this.errorMessage()) {
       this.errorMessage.set('');
     }
   }
 
+  /* EN: Toggle password visibility.
+   * ES: Alterna la visibilidad de la contrasena.
+   */
   togglePassword() {
     this.showPassword.update(value => !value);
   }
 
+  /* EN: Submit the registration form.
+   * ES: Envia el formulario de registro.
+   */
   async onSubmit() {
     this.errorMessage.set('');
     const { email, password, confirmPassword, username } = this.form.value;
