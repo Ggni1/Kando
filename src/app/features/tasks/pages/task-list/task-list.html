@@ -41,7 +41,7 @@
                             <p class="task-username">Assigned to: {{ getUserUsername(task.user_id) }}</p>
                             <div class="task-actions">
                                 <a [routerLink]="['/tasks', task.id]" class="btn-view">View</a>
-                                @if (isAdmin()) {
+                                @if (!isGuest() && isAdmin()) {
                                     <a [routerLink]="['/tasks', task.id, 'edit']" class="btn-edit">Edit</a>
                                 }
                             </div>

@@ -18,7 +18,13 @@
             font-weight: 800;
             color: var(--primary-color);
             letter-spacing: 1px;
-            cursor: default;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
+                color: var(--accent-yellow-strong);
+            }
         }
 
         .nav-link {
@@ -44,6 +50,16 @@
         .badge-admin {
             background-color: var(--primary-color);
             color: var(--text-on-accent);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.4px;
+        }
+
+        .badge-guest {
+            background-color: #8b5cf6;
+            color: white;
             padding: 4px 8px;
             border-radius: 4px;
             font-weight: 800;

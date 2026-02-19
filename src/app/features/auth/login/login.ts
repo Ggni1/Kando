@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -11,7 +11,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   private fb = inject(FormBuilder)
   private authService = inject(AuthService);
   
@@ -23,6 +23,13 @@ export class Login {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
+
+  ngOnInit() {
+    // EN: Clear guest flag when entering login page (guest sessions are temporary).
+    // ES: Limpia el flag de invitado al entrar a login (las sesiones de invitado son temporales).
+    sessionStorage.removeItem('kando.guest');
+    sessionStorage.removeItem('kando.user_role');
+  }
 
   /* EN: Clear the current error message.
    * ES: Limpia el mensaje de error actual.

@@ -1,17 +1,23 @@
 <nav class="navbar">
     <div class="navbar-brand">
-        <span class="logo">Kando</span>
+        <a routerLink="/" class="logo">Kando</a>
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
         <a class="nav-link" routerLink="/tasks">Tasks</a>
     </div>
 
     <div class="navbar-user">
-        @if (isAdmin()) {
+        @if (isGuest()) {
+            <span class="badge-guest">GUEST MODE</span>
+        } @else if (isAdmin()) {
             <span class="badge-admin">ADMIN MODE</span>
-            <a class="admin-link" routerLink="/admin/users">Administrar usuarios</a>
+            <a class="admin-link" routerLink="/admin/users">Manage Users</a>
         }
         <span class="user-email">
-        {{ authService.profileUsername() || authService.currentUser()?.email || 'User' }}
+        @if (isGuest()) {
+            Guest
+        } @else {
+            {{ authService.profileUsername() || authService.currentUser()?.email || 'User' }}
+        }
         </span>
         <button (click)="logout()" class="btn-logout">Log out</button>
     </div>

@@ -138,7 +138,7 @@
                             <a [routerLink]="'/tasks/' + task.id" class="btn-view-detail" title="View details">
                                 <mat-icon>visibility</mat-icon>
                             </a>
-                            @if (isAdmin() || task.user_id === currentUserId()) {
+                            @if (!isGuest() && (isAdmin() || task.user_id === currentUserId())) {
                                 <button class="btn-card-menu" (click)="toggleTaskMenu(task)" title="Options">
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
@@ -162,7 +162,7 @@
                 }
             </div>
     
-            @if (activeColumnID() === column.id) {
+            @if (!isGuest() && activeColumnID() === column.id) {
                 <div class="add-task-form">
                     <input
                         [ngModel]="newTaskTitle()"
@@ -176,7 +176,7 @@
                         <button (click)="cancelAddTask()" class="btn-cancel">Cancel</button>
                     </div>
                 </div>
-            } @else {
+            } @else if (!isGuest()) {
                 <button class="btn-add-task" (click)="enableAddTask(column.id)">
                     <span class="plus">+</span> Add card
                 </button>

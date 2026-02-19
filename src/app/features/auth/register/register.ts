@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './register.html',
   styleUrl: './register.scss'
 })
-export class Register {
+export class Register implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   
@@ -27,6 +27,13 @@ export class Register {
     confirmPassword: ['', [Validators.required]],
     username: ['', [Validators.required, Validators.minLength(3)]],
   });
+
+  ngOnInit() {
+    // EN: Clear guest flag when entering register page (guest sessions are temporary).
+    // ES: Limpia el flag de invitado al entrar a registro (las sesiones de invitado son temporales).
+    sessionStorage.removeItem('kando.guest');
+    sessionStorage.removeItem('kando.user_role');
+  }
 
   /* EN: Clear the current error message.
    * ES: Limpia el mensaje de error actual.

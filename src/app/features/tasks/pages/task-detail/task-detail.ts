@@ -18,6 +18,7 @@ export class TaskDetail implements OnInit {
     private taskService = inject(TaskService);
     private route = inject(ActivatedRoute);
 
+    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     task = signal<Task | null>(null);
     username = signal<string>('');
     loading = signal(true);

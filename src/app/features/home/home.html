@@ -1,0 +1,49 @@
+<div class="home-layout">
+    <main class="home-container">
+        <div class="hero-section">
+            <h1>Welcome to Kando</h1>
+            <p class="tagline">A modern Kanban board for task management</p>
+            <p class="description">Organize, prioritize, and track your tasks efficiently with our intuitive drag-and-drop interface.</p>
+
+            <div class="cta-buttons">
+                <button routerLink="/login" class="btn btn-primary">Sign In</button>
+                <button (click)="loginAsGuest()" class="btn btn-secondary">Enter as Guest</button>
+            </div>
+        </div>
+
+        <section class="features-section">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <mat-icon class="feature-icon">task_alt</mat-icon>
+                    <h3>Organized Tasks</h3>
+                    <p>Keep all your tasks organized in columns</p>
+                </div>
+                <div class="feature-card">
+                    <mat-icon class="feature-icon">track_changes</mat-icon>
+                    <h3>Drag & Drop</h3>
+                    <p>Easy task management with intuitive drag-and-drop</p>
+                </div>
+                <div class="feature-card">
+                    <mat-icon class="feature-icon">group</mat-icon>
+                    <h3>Collaboration</h3>
+                    <p>Assign tasks to team members</p>
+                </div>
+                <div class="feature-card">
+                    <mat-icon class="feature-icon">label</mat-icon>
+                    <h3>Tag System</h3>
+                    <p>Categorize tasks with custom tags</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="guest-section">
+            <h2>Try as Guest</h2>
+            <p>Explore Kando as a guest. View tasks and boards (read-only mode).</p>
+            <p class="guest-note">Note: Guest account can only view tasks. To create and edit tasks, please sign up.</p>
+            <button (click)="loginAsGuest()" class="btn btn-secondary-large">Enter as Guest</button>
+        </section>
+    </main>
+
+    <app-footer></app-footer>
+</div>

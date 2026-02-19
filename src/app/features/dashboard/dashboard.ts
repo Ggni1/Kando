@@ -23,6 +23,7 @@ export class Dashboard implements OnInit {
   public authService = inject(AuthService);
   private router = inject(Router);
   
+  isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
   columns = signal<Column[]>([]);
 
   activeColumnID = signal<number | null>(null);

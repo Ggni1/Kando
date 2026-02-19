@@ -20,6 +20,7 @@ export class TaskList implements OnInit {
     private taskService = inject(TaskService);
     public authService = inject(AuthService);
 
+    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     tasks = signal<Task[]>([]);
     usernames = signal<Map<string, string>>(new Map());
     loading = signal(true);

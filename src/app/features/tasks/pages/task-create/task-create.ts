@@ -20,6 +20,7 @@ export class TaskCreate {
     public authService = inject(AuthService);
     private router = inject(Router);
 
+    isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
     loading = signal(false);
     errorMessage = signal('');
     successMessage = signal('');

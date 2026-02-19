@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -12,12 +12,15 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class Navbar {
   public authService = inject(AuthService);
+  isGuest = signal(sessionStorage.getItem('kando.guest') === 'true');
   readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
 
-  /* EN: Sign out the current user.
-   * ES: Cierra la sesion del usuario actual.
+  /* EN: Sign out the current user and clear guest flag.
+   * ES: Cierra la sesion del usuario actual y limpia el flag de invitado.
    */
   logout() {
+    sessionStorage.removeItem('kando.guest');
+    this.isGuest.set(false);
     this.authService.signOut();
   }
 }

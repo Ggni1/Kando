@@ -28,7 +28,9 @@
                         <p><strong>Created:</strong> {{ t.created_at | date: 'medium' }}</p>
                     </div>
                     <div class="detail-actions">
-                        <a [routerLink]="['/tasks', t.id, 'edit']" class="btn-edit">Edit</a>
+                        @if (!isGuest()) {
+                            <a [routerLink]="['/tasks', t.id, 'edit']" class="btn-edit">Edit</a>
+                        }
                         <a routerLink="/dashboard" class="btn-back-text">Back to Dashboard</a>
                     </div>
                 </div>
