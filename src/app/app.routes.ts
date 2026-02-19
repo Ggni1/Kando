@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
+import { EmailVerification } from './features/auth/email-verification/email-verification';
 import { Home } from './features/home/home';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -9,6 +10,7 @@ export const routes: Routes = [
     { path: '', component: Home },
     { path: 'login', component: Login },
     { path: 'register', component: Register },
+    { path: 'verify-email', component: EmailVerification },
     { 
         path: 'dashboard', 
         loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard),

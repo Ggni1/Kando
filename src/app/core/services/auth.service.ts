@@ -62,10 +62,9 @@ export class AuthService {
         if (error) throw error;
         if (data.session?.access_token) {
             this.storeToken(data.session.access_token);
-            this.router.navigate(['/dashboard']);
-            return;
         }
-        await this.signIn(email, password);
+        // Redirect to email verification page
+        this.router.navigate(['/verify-email'], { state: { email } });
     }
 
     /* EN: Sign in and redirect to the dashboard.
