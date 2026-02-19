@@ -22,11 +22,23 @@ export class Dashboard implements OnInit {
 
   activeColumnID = signal<number | null>(null);
   newTaskTitle = signal<string>('');
+  boardTitle = signal<string>('Main Board');
+  boardTitleDraft = signal<string>('');
+  isEditingBoardTitle = signal<boolean>(false);
   readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
   readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null);
+  private readonly boardTitleStorageKey = 'kando.boardTitle';
 
   async ngOnInit() {
+    this.loadBoardTitle();
     await this.loadBoard();
+  }
+
+  loadBoardTitle() {
+    const storedTitle = localStorage.getItem(this.boardTitleStorageKey);
+    if (storedTitle) {
+      this.boardTitle.set(storedTitle);
+    }
   }
   
   async loadBoard() {
@@ -55,6 +67,25 @@ export class Dashboard implements OnInit {
   cancelAddTask() {
     this.activeColumnID.set(null);
     this.newTaskTitle.set('');
+  }
+
+  startEditBoardTitle() {
+    if (!this.isAdmin()) return;
+    this.boardTitleDraft.set(this.boardTitle());
+    this.isEditingBoardTitle.set(true);
+  }
+
+  cancelEditBoardTitle() {
+    this.isEditingBoardTitle.set(false);
+    this.boardTitleDraft.set('');
+  }
+
+  saveBoardTitle() {
+    const title = this.boardTitleDraft().trim();
+    if (!title) return;
+    this.boardTitle.set(title);
+    localStorage.setItem(this.boardTitleStorageKey, title);
+    this.isEditingBoardTitle.set(false);
   }
 
   async onAddTask(column: Column) { 

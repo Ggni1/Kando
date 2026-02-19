@@ -7,8 +7,24 @@
             @if (isAdmin()) {
                 <span class="badge-admin">ADMIN MODE</span>
             }
-            <span class="view-title">Tablero Principal</span>
-            <div class="search-bar">Filtrar por palabra clave...</div>
+            <div class="view-title">
+                @if (isEditingBoardTitle()) {
+                    <input
+                        class="board-title-input"
+                        type="text"
+                        [ngModel]="boardTitleDraft()"
+                        (ngModelChange)="boardTitleDraft.set($event)"
+                        (keyup.enter)="saveBoardTitle()" />
+                    <button class="btn-title-save" (click)="saveBoardTitle()" title="Save">Save</button>
+                    <button class="btn-title-cancel" (click)="cancelEditBoardTitle()" title="Cancel">Cancel</button>
+                } @else {
+                    <span class="title-text">{{ boardTitle() }}</span>
+                    @if (isAdmin()) {
+                        <button class="btn-title-edit" (click)="startEditBoardTitle()" title="Edit">Edit</button>
+                    }
+                }
+            </div>
+            <div class="search-bar">Filter by keyword...</div>
         </div>
         </header>
         
@@ -55,7 +71,7 @@
                     
                     <div class="card-footer">
                         @if (task.user_id === currentUserId()) {
-                            <span class="owner-badge">Tú</span>
+                            <span class="owner-badge">You</span>
                         } @else {
                             @if (!isAdmin()) {
                                 <span>🔒</span> }
@@ -67,18 +83,21 @@
     
             @if (activeColumnID() === column.id) {
                 <div class="add-task-form">
-                        <textarea [ngModel]="newTaskTitle()" 
+                    <div class="add-task-row">
+                        <input
+                            [ngModel]="newTaskTitle()"
                             (ngModelChange)="newTaskTitle.set($event)"
-                            (keyup.enter)="onAddTask(column)" 
-                            class="task-input" rows="2" placeholder="Escribe un título..."></textarea>
-                    <div class="form-actions">
-                        <button (click)="onAddTask(column)" class="btn-save">Añadir</button>
-                        <button (click)="cancelAddTask()" class="btn-cancel">✕</button>
+                            (keyup.enter)="onAddTask(column)"
+                            class="task-input-line"
+                            type="text"
+                            placeholder="Write a title..." />
+                        <button (click)="onAddTask(column)" class="btn-save">Add</button>
+                        <button (click)="cancelAddTask()" class="btn-cancel">Cancel</button>
                     </div>
                 </div>
             } @else {
                 <button class="btn-add-task" (click)="enableAddTask(column.id)">
-                    <span class="plus">+</span> Añadir tarjeta
+                    <span class="plus">+</span> Add card
                 </button>
             }
             </div>
