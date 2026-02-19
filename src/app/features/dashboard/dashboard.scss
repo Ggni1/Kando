@@ -23,18 +23,18 @@
                 color: var(--text-color);
                 font-weight: 700;
                 font-size: 1.1rem;
-                background: var(--login-card-color);
+                background: var(--auth-card-color);
                 padding: 0.4rem 1rem;
                 border-radius: 6px;
-                border: 1px solid #4b5563;
+                border: 1px solid var(--border-color);
             }
 
             .search-bar {
                 flex: 1;
                 max-width: 400px;
                 background: rgba(0,0,0,0.2);
-                border: 1px solid #4b5563;
-                color: #9ca3af;
+                border: 1px solid var(--border-color);
+                color: var(--muted-text);
                 padding: 0.4rem 0.8rem;
                 border-radius: 6px;
                 font-size: 0.9rem;
@@ -55,8 +55,8 @@
         overflow-x: auto;
 
         .column {
-            background-color: var(--login-card-color); 
-            border: 1px solid #4b5563;
+            background-color: var(--auth-card-color); 
+            border: 1px solid var(--border-color);
             min-width: 350px;
             max-width: 350px;
             border-radius: 6px; 
@@ -84,8 +84,8 @@
                     }
 
                     .task-count {
-                        background-color: rgba(255, 255, 255, 0.1);
-                        color: #d1d5db;
+                        background-color: var(--badge-bg);
+                        color: var(--muted-text-strong);
                         padding: 0.1rem 0.6rem;
                         border-radius: 10px;
                         font-size: 0.75rem;
@@ -107,7 +107,7 @@
                 .btn-options {
                     background: transparent;
                     border: none;
-                    color: #9ca3af;
+                    color: var(--muted-text);
                     cursor: pointer;
                     font-weight: bold;
                     font-size: 1.2rem;
@@ -126,11 +126,11 @@
                 height: 100%;
 
                 &::-webkit-scrollbar { width: 4px; }
-                &::-webkit-scrollbar-thumb { background: #5a5a5c; border-radius: 4px; }
+                &::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
 
                 .task-card {
-                    background-color: #374151; /* Un poco más oscuro que la columna */
-                    border: 1px solid #4b5563; /* Borde visible */
+                    background-color: var(--panel-color);
+                    border: 1px solid var(--border-color);
                     padding: 0.75rem;
                     border-radius: 6px;
                     cursor: pointer;
@@ -145,14 +145,14 @@
                         
                         .tag {
                             font-size: 0.7rem;
-                            color: #9ca3af;
-                            border: 1px solid #4b5563;
+                            color: var(--muted-text);
+                            border: 1px solid var(--border-color);
                             padding: 0 0.4rem;
                             border-radius: 10px;
                         }
                         .repo-ref {
                             font-size: 0.7rem;
-                            color: #9ca3af;
+                            color: var(--muted-text);
                         }
                     }
 
@@ -166,7 +166,7 @@
 
                     &:hover {
                         border-color: var(--primary-color); /* Hover Amarillo */
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        box-shadow: 0 2px 4px var(--shadow-color);
                     }
                 }
             }
@@ -174,7 +174,7 @@
             .btn-add-task {
                 background: transparent;
                 border: none;
-                color: #9ca3af;
+                color: var(--muted-text);
                 text-align: left;
                 padding: 0.5rem 0.25rem;
                 cursor: pointer;
@@ -192,7 +192,7 @@
 
                 &:hover {
                     color: var(--primary-color);
-                    background-color: rgba(255,255,255, 0.03);
+                    background-color: var(--hover-bg);
                 }
             }
         }
@@ -214,10 +214,10 @@
     display: flex;
     justify-content: flex-end;
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--muted-text);
     
     .owner-badge {
-        background: rgba(255,255,255,0.1);
+        background: var(--badge-bg);
         padding: 2px 6px;
         border-radius: 4px;
         font-size: 0.7rem;
