@@ -56,6 +56,26 @@ export class TaskService {
 
         if (error) throw error;
     }
+
+    // Actualizar tarea
+    async updateTask(taskId: number, updates: Partial<Pick<Task, 'title' | 'tag' | 'column_id'>>) {
+        const { error } = await this.supabase
+        .from('tasks')
+        .update(updates)
+        .eq('id', taskId);
+
+        if (error) throw error;
+    }
+
+    // Eliminar tarea
+    async deleteTask(taskId: number) {
+        const { error } = await this.supabase
+        .from('tasks')
+        .delete()
+        .eq('id', taskId);
+
+        if (error) throw error;
+    }
     
     async updateTaskStatus(id: string, newStatus: string) {
         const { error } = await this.supabase

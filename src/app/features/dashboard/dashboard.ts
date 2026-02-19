@@ -5,13 +5,14 @@ import { Footer } from '../../shared/components/footer/footer';
 import { Column, Task } from '../../core/models/board';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { TaskService } from '../../core/services/task.service';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, Navbar, Footer, DragDropModule, FormsModule],
+  imports: [CommonModule, Navbar, Footer, DragDropModule, FormsModule, MatIconModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -23,6 +24,10 @@ export class Dashboard implements OnInit {
 
   activeColumnID = signal<number | null>(null);
   newTaskTitle = signal<string>('');
+  editingTaskId = signal<number | null>(null);
+  editingTaskTitle = signal<string>('');
+  editingTask = signal<Task | null>(null);
+  activeTaskMenu = signal<number | null>(null);
   boardTitle = signal<string>('Main Board');
   boardTitleDraft = signal<string>('');
   isEditingBoardTitle = signal<boolean>(false);
@@ -68,6 +73,71 @@ export class Dashboard implements OnInit {
   cancelAddTask() {
     this.activeColumnID.set(null);
     this.newTaskTitle.set('');
+  }
+
+  toggleTaskMenu(task: Task) {
+    if (this.activeTaskMenu() === task.id) {
+      this.activeTaskMenu.set(null);
+    } else {
+      this.activeTaskMenu.set(task.id);
+    }
+  }
+
+  enableEditTask(task: Task) {
+    if (!this.isAdmin() && task.user_id !== this.currentUserId()) return;
+    this.editingTaskId.set(task.id);
+    this.editingTaskTitle.set(task.title);
+    this.editingTask.set(task);
+    this.activeTaskMenu.set(null);
+  }
+
+  cancelEditTask() {
+    this.editingTaskId.set(null);
+    this.editingTaskTitle.set('');
+    this.editingTask.set(null);
+    this.activeTaskMenu.set(null);
+  }
+
+  async saveEditTask() {
+    const task = this.editingTask();
+    if (!task) return;
+    if (!this.isAdmin() && task.user_id !== this.currentUserId()) return;
+
+    const newTitle = this.editingTaskTitle().trim();
+    if (!newTitle) {
+      console.warn('Title is empty');
+      return;
+    }
+
+    try {
+      await this.taskService.updateTask(task.id, { title: newTitle });
+
+      const updatedColumns = this.columns().map(col => ({
+        ...col,
+        tasks: col.tasks.map(t => (t.id === task.id ? { ...t, title: newTitle } : t))
+      }));
+      this.columns.set(updatedColumns);
+      this.cancelEditTask();
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  }
+
+  async deleteTaskHandler(task: Task) {
+    if (!this.isAdmin() && task.user_id !== this.currentUserId()) return;
+    if (!confirm('Are you sure you want to delete this task?')) return;
+
+    try {
+      await this.taskService.deleteTask(task.id);
+
+      const updatedColumns = this.columns().map(col => ({
+        ...col,
+        tasks: col.tasks.filter(t => t.id !== task.id)
+      }));
+      this.columns.set(updatedColumns);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   }
 
   startEditBoardTitle() {
@@ -118,14 +188,6 @@ export class Dashboard implements OnInit {
   }
 
   drop(event: CdkDragDrop<Task[]>) {
-    const task = event.previousContainer.data[event.previousIndex];
-    const isAdmin = this.isAdmin();
-    const isOwner = task.user_id === this.currentUserId();
-
-    if (!isAdmin && !isOwner) {
-      return; 
-    }
-
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -136,7 +198,8 @@ export class Dashboard implements OnInit {
         event.currentIndex,
       );
 
-      const targetColumn = this.columns().find(col => col.tasks === event.container.data);     
+      const task = event.container.data[event.currentIndex];
+      const targetColumn = this.columns().find(col => col.tasks === event.container.data);
       if (targetColumn && task) {
         task.column_id = targetColumn.id;
         this.taskService.updateTaskColumn(task.id, targetColumn.id);

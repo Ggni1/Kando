@@ -58,8 +58,7 @@
 
                 @for (task of column.tasks; track task.id) {
                 <div class="task-card" 
-                    cdkDrag
-                    [cdkDragDisabled]="!isAdmin() && task.user_id !== currentUserId()">
+                    cdkDrag>
                     
                     <div class="custom-placeholder" *cdkDragPlaceholder></div>
 
@@ -72,10 +71,26 @@
                     <div class="card-footer">
                         @if (task.user_id === currentUserId()) {
                             <span class="owner-badge">You</span>
-                        } @else {
-                            @if (!isAdmin()) {
-                                <span>🔒</span> }
                         }
+                        <div class="card-actions">
+                            @if (isAdmin() || task.user_id === currentUserId()) {
+                                <button class="btn-card-menu" (click)="toggleTaskMenu(task)" title="Options">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                @if (activeTaskMenu() === task.id) {
+                                    <div class="task-menu">
+                                        <button (click)="enableEditTask(task)" class="menu-item">
+                                            <mat-icon>edit</mat-icon>
+                                            Edit
+                                        </button>
+                                        <button (click)="deleteTaskHandler(task)" class="menu-item delete">
+                                            <mat-icon>delete</mat-icon>
+                                            Delete
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
                     </div>
                 </div>
                 }
@@ -103,6 +118,22 @@
             </div>
         }
         </div>
+
+        @if (editingTaskId() !== null) {
+            <div class="edit-modal-overlay" (click)="cancelEditTask()">
+                <div class="edit-modal" (click)="$event.stopPropagation()">
+                    <h3>Edit Task</h3>
+                    <textarea
+                        [ngModel]="editingTaskTitle()"
+                        (ngModelChange)="editingTaskTitle.set($event)"
+                        class="edit-textarea"></textarea>
+                    <div class="modal-actions">
+                        <button (click)="saveEditTask()" class="btn-save">Save</button>
+                        <button (click)="cancelEditTask()" class="btn-cancel">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
     </main>
 
     <app-footer></app-footer>

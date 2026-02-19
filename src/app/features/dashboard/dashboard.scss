@@ -168,7 +168,7 @@
                 flex-direction: column;
                 gap: 0.5rem;
                 overflow-y: auto;
-                min-height: 0;
+                min-height: 300px;
                 flex: 1;
 
                 &::-webkit-scrollbar { width: 4px; }
@@ -179,11 +179,12 @@
                     border: 1px solid var(--border-color);
                     padding: 0.75rem;
                     border-radius: 6px;
-                    cursor: pointer;
+                    cursor: grab;
                     display: flex;
                     flex-direction: column;
                     gap: 0.4rem;
                     transition: border-color 0.1s;
+                    position: relative;
 
                     .card-meta {
                         display: flex;
@@ -208,6 +209,93 @@
                         color: var(--text-color);
                         line-height: 1.4;
                         font-weight: 500;
+                    }
+
+                    .card-footer {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 0.5rem;
+                        font-size: 0.8rem;
+                        color: var(--muted-text);
+
+                        .owner-badge {
+                            background: var(--badge-bg);
+                            padding: 2px 6px;
+                            border-radius: 4px;
+                            font-size: 0.7rem;
+                        }
+
+                        .card-actions {
+                            display: flex;
+                            justify-content: flex-end;
+
+                            .btn-card-menu {
+                                background: transparent;
+                                border: none;
+                                color: var(--muted-text);
+                                cursor: pointer;
+                                padding: 2px 4px;
+                                border-radius: 3px;
+                                transition: all 0.2s;
+
+                                &:hover {
+                                    color: var(--text-color);
+                                    background-color: rgba(255,255,255,0.05);
+                                }
+
+                                mat-icon {
+                                    font-size: 18px;
+                                    width: 18px;
+                                    height: 18px;
+                                    line-height: 18px;
+                                }
+                            }
+
+                            .task-menu {
+                                position: absolute;
+                                right: 8px;
+                                top: 34px;
+                                background-color: var(--surface-color);
+                                border: 1px solid var(--border-color);
+                                border-radius: 4px;
+                                min-width: 120px;
+                                z-index: 10;
+
+                                .menu-item {
+                                    background: transparent;
+                                    border: none;
+                                    color: var(--muted-text-strong);
+                                    cursor: pointer;
+                                    padding: 0.5rem 0.75rem;
+                                    font-size: 0.85rem;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
+                                    width: 100%;
+                                    text-align: left;
+                                    transition: all 0.2s;
+
+                                    mat-icon {
+                                        font-size: 16px;
+                                        width: 16px;
+                                        height: 16px;
+                                    }
+
+                                    &:hover {
+                                        background-color: rgba(255,255,255,0.1);
+                                    }
+
+                                    &.delete {
+                                        color: #ef4444;
+
+                                        &:hover {
+                                            background-color: rgba(239,68,68,0.1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     &:hover {
@@ -365,4 +453,86 @@
 
 .cdk-drag-animating {
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.edit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.edit-modal {
+    background-color: var(--auth-card-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.3);
+
+    h3 {
+        color: var(--text-color);
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+    }
+
+    .edit-textarea {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 0.75rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        resize: vertical;
+        width: 100%;
+        min-height: 120px;
+        margin-bottom: 1rem;
+
+        &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255,215,0,0.1);
+        }
+
+        &::placeholder {
+            color: var(--muted-text);
+        }
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 0.75rem;
+
+        button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+
+            &.btn-save {
+                background-color: var(--primary-color);
+                color: #000;
+                &:hover { background-color: #fbbf24; }
+                &:active { transform: scale(0.98); }
+            }
+
+            &.btn-cancel {
+                background-color: var(--border-color);
+                color: var(--muted-text-strong);
+                &:hover { background-color: #6b7280; }
+            }
+        }
+    }
 }
