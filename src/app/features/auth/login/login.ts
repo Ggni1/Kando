@@ -3,10 +3,11 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatIcon],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -15,6 +16,7 @@ export class Login {
   private authService = inject(AuthService);
 
   errorMessage = '';
+  showPassword = false;
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -26,6 +28,10 @@ export class Login {
       this.errorMessage = '';
     }
   }
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
 
   async onSubmit() {
     this.errorMessage = '';
@@ -33,17 +39,13 @@ export class Login {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      setTimeout(() => {
-      this.errorMessage = 'Please fill in all required fields correctly.';
-      }, 10);
+      setTimeout(() => { this.errorMessage = 'Please fill in all required fields correctly.';}, 10);
     } else {
       try {
         await this.authService.signIn(email!, password!);
       } catch (error: any) {
         console.log(error.message);
-        setTimeout(() => {
-        this.errorMessage = 'Login failed. Please check your credentials and try again.';
-        }, 10);
+        setTimeout(() => { this.errorMessage = 'Login failed. Please check your credentials and try again.'; }, 10);
       }
     }
   }

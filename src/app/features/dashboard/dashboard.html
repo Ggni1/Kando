@@ -1,0 +1,59 @@
+<div class="board-layout">
+    <app-navbar></app-navbar>
+
+    <main class="board-container">
+        <header class="board-header">
+            <div class="view-controls">
+                <span class="view-title">TODOs</span>
+                <div class="search-bar">Filter by keyword</div>
+            </div>
+        </header>
+        
+        <div class="board-columns" cdkDropListGroup>
+        
+        @for (column of columns; track column.title) {
+            <div class="column">
+                <div class="column-header">
+                    <div class="header-title">
+                        <span class="status-circle" 
+                                [ngClass]="{
+                                'todo': column.status === 'todo',
+                                'progress': column.status === 'doing',
+                                'done': column.status === 'done',
+                                'backlog': column.status === 'backlog'
+                                }">
+                        </span>
+                        <h3>{{ column.title }}</h3>
+                        <span class="task-count">{{ column.tasks.length }}</span>
+                    </div>
+                    <button class="btn-options">...</button>
+                </div>
+                
+                <div class="task-list"
+                     cdkDropList
+                     [cdkDropListData]="column.tasks"
+                     (cdkDropListDropped)="drop($event)">
+
+                    @for (task of column.tasks; track task.id) {
+                    <div class="task-card" cdkDrag>
+                        
+                        <div class="custom-placeholder" *cdkDragPlaceholder></div>
+
+                        @if (task.tag) {
+                        <div class="card-meta">
+                            <span class="tag">{{ task.tag }}</span>
+                        </div>
+                        }
+                        <p class="task-title">{{ task.title }}</p>
+                    </div>
+                    }
+                </div>
+        
+                <button class="btn-add-task">
+                    <span class="plus">+</span> Add Task
+                </button>
+            </div>
+        }
+        </div>
+    </main>
+</div>

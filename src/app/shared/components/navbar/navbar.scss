@@ -1,0 +1,49 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--login-card-color); 
+    border-bottom: 1px solid #5a5a5c;
+    height: 70px;
+    box-sizing: border-box;
+
+    .navbar-brand {
+        .logo {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        letter-spacing: 1px;
+        cursor: default;
+        }
+    }
+
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+        .user-email {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: var(--error-color);
+                color: white;
+            }
+        }
+  }
+}

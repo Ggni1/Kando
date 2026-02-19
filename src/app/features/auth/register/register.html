@@ -1,30 +1,66 @@
 <div class="register-container">
     <div class="register-card">
-        <h2 class="register-title">Register</h2>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
-            <div class="register-field">
-                <label>Email</label>
-                <input (focus)="clearError()" type="email" formControlName="email" placeholder="example@gmail.com">
+        @if (registrationSuccess) {
+            <div class="success-message">
+                <h2 class="register-title">Verify your email</h2>
+                <p>We have sent a confirmation link to your email address.</p>
+                <p>Please click the link to activate your account.</p>
+                
+                <a routerLink="/login" class="btn-submit" style="display:block; text-align:center; text-decoration:none; margin-top:1rem;">
+                    Go to Login
+                </a>
             </div>
-
-            <div class="register-field">
-                <label>Password</label>
-                <input (focus)="clearError()" type="password" formControlName="password" placeholder="Minimum 8 characters">
-            </div>
-
-            <div class="register-field">
-            <label>Confirm Password</label>
-            <input (focus)="clearError()"  type="password" formControlName="confirmPassword" placeholder="Repeat your password">
-            </div>
-
-            @if (errorMessage) {
-                <div class="error-message">
-                    {{ errorMessage }}
+        } 
+        @else {
+            <h2 class="register-title">Register</h2>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
+                <div class="register-field">
+                    <label>Email</label>
+                    <input 
+                        (input)="clearError()" 
+                        type="email" 
+                        formControlName="email" 
+                        placeholder="example@gmail.com">
                 </div>
-            }
-            <button type="submit" [disabled]="form.invalid" class="btn-submit">Register</button>
-            <p class="register-link">Already have an account? <a routerLink="/login">Log In</a>
-        </p>
-        </form>
+
+                <div class="register-field">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input 
+                            [type]="showPassword ? 'text' : 'password'" 
+                            formControlName="password" 
+                            (input)="clearError()"
+                            placeholder="Minimum 8 characters">
+                        
+                        <button type="button" (click)="togglePassword()" class="btn-eye"><mat-icon style="color: white;">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+                    </div>
+                </div>
+
+                <div class="register-field">
+                    <label>Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input 
+                            [type]="showPassword ? 'text' : 'password'" 
+                            formControlName="confirmPassword" 
+                            (input)="clearError()" 
+                            placeholder="Repeat your password">
+                    </div>
+                </div>
+
+                @if (errorMessage) {
+                    <div class="error-message">
+                        {{ errorMessage }}
+                    </div>
+                }
+
+                <button type="submit" [disabled]="form.invalid" class="btn-submit">
+                    Register
+                </button>
+                
+                <p class="register-link">
+                    Already have an account? <a routerLink="/login">Log In</a>
+                </p>
+            </form>
+        }
     </div>
 </div>

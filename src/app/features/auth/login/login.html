@@ -10,7 +10,15 @@
 
             <div class="login-field">
                 <label>Password</label>
-                <input (focus)="clearError()" type="password" formControlName="password" placeholder="Enter your password">            
+                <div class="password-wrapper">
+                    <input 
+                        [type]="showPassword ? 'text' : 'password'" 
+                        formControlName="password" 
+                        (input)="clearError()"
+                        placeholder="Enter your password">
+                    
+                    <button type="button" (click)="togglePassword()" class="btn-eye"> <mat-icon style="color: white;">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+                </div>
             </div>
 
             @if (errorMessage) {
