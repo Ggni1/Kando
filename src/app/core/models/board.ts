@@ -1,12 +1,16 @@
 export interface Task {
-    id: string;
-    title: string;
-    status: 'backlog' | 'todo' | 'doing' | 'done';
-    tag?: string;
+  id: number;          
+  created_at: string;
+  title: string;
+  tag?: string;
+  column_id: number;  
+  user_id: string;
 }
 
 export interface Column {
-    title: string;
-    status: 'backlog' | 'todo' | 'doing' | 'done';
-    tasks: Task[];
+  id: number;           
+  title: string;
+  status: string;     
+  position: number;
+  tasks: Task[];       
 }

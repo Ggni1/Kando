@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Column, Task } from '../../core/models/board';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../core/services/task.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,47 +14,86 @@ import { TaskService } from '../../core/services/task.service';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard  {
+export class Dashboard implements OnInit {
   private taskService = inject(TaskService);
-  activeColumn: string | null = null;
-  newTaskTitle: string = '';
+  public authService = inject(AuthService);
+  
+  columns = signal<Column[]>([]);
 
-  columns: Column[] = [
-    { title: 'Backlog', status: 'backlog', tasks: [] },
-    { title: 'To Do', status: 'todo', tasks: [] },
-    { title: 'Doing', status: 'doing', tasks: [] },
-    { title: 'Done', status: 'done', tasks: [] },
-  ];
+  activeColumnID = signal<number | null>(null);
+  newTaskTitle = signal<string>('');
+  readonly isAdmin = computed(() => this.authService.userRole() === 'admin');
+  readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null);
 
-  enableAddTask(columnStatus: string) {
-    this.activeColumn = columnStatus;
-    this.newTaskTitle = '';
+  async ngOnInit() {
+    await this.loadBoard();
+  }
+  
+  async loadBoard() {
+    try {
+      // Carga simultánea de columnas y tareas
+      const [dbColumns, tasks] = await Promise.all([
+        this.taskService.getColumns(),
+        this.taskService.getTasks()
+      ]);
+
+      // Mapear tareas a sus columnas correspondientes
+      if (dbColumns && dbColumns.length > 0) {
+      const mappedColumns = dbColumns.map(col => ({ ...col, tasks: tasks ? tasks.filter(task => task.column_id === col.id) : [] }));
+      this.columns.set(mappedColumns);
+    }
+    } catch (error: any) {
+      console.error('Error cargando el tablero:', error);
+    }
+  }
+
+  enableAddTask(columnId: number) {
+    this.activeColumnID.set(columnId);
+    this.newTaskTitle.set('');
   }
 
   cancelAddTask() {
-    this.activeColumn = null;
-    this.newTaskTitle = '';
+    this.activeColumnID.set(null);
+    this.newTaskTitle.set('');
   }
 
-  async onAddTask(status: string) {
-    if (!this.newTaskTitle.trim()) return;
+  async onAddTask(column: Column) { 
+    const title = this.newTaskTitle().trim();
+    if (!title){
+      console.warn('El titulo esta vacío');
+    } else{
+      try {
+        this.newTaskTitle.set('');
 
-    try {
-      const title = this.newTaskTitle;
-      this.newTaskTitle = '';
+        const newTask = await this.taskService.createTask(title, column.id);
+        
+        if (!column.tasks) column.tasks = [];
+        column.tasks.push(newTask);
 
-      const newTask = await this.taskService.createTask(title, status);
-      
-      const column = this.columns.find(col => col.status === status);
-      if (column) {
-        column.tasks.push(newTask); 
+        // Actualizar la señal de columnas con la nueva tarea
+        const updatedColumns = this.columns().map(col => {
+          if (col.id === column.id) {
+            return { ...col, tasks: [...col.tasks, newTask] };
+          }
+          return col;
+        });
+        this.columns.set(updatedColumns);
+
+      } catch (error) {
+        console.error('Error creando tarea:', error);
       }
-    } catch (error) {
-      console.error('Error creating task:', error);
     }
   }
 
   drop(event: CdkDragDrop<Task[]>) {
+    const task = event.previousContainer.data[event.previousIndex];
+    const isAdmin = this.isAdmin();
+    const isOwner = task.user_id === this.currentUserId();
+
+    if (!isAdmin && !isOwner) {
+      return; 
+    }
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -63,7 +103,13 @@ export class Dashboard  {
         event.previousIndex,
         event.currentIndex,
       );
-      const task = event.container.data[event.currentIndex];
+
+      const targetColumn = this.columns().find(col => col.tasks === event.container.data);     
+      if (targetColumn && task) {
+        task.column_id = targetColumn.id;
+        this.taskService.updateTaskColumn(task.id, targetColumn.id);
+      }
     }
   }
+
 }

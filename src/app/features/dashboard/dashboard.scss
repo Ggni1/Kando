@@ -199,6 +199,31 @@
     }
 }
 
+.badge-admin {
+    background-color: var(--primary-color);
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    margin-right: 10px;
+}
+
+.card-footer {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.8rem;
+    color: #6b7280;
+    
+    .owner-badge {
+        background: rgba(255,255,255,0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+    }
+}
+
 .cdk-drag-placeholder {
   opacity: 0;
 }

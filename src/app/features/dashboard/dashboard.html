@@ -3,55 +3,84 @@
 
     <main class="board-container">
         <header class="board-header">
-            <div class="view-controls">
-                <span class="view-title">TODOs</span>
-                <div class="search-bar">Filter by keyword</div>
-            </div>
+        <div class="view-controls">
+            @if (isAdmin()) {
+                <span class="badge-admin">ADMIN MODE</span>
+            }
+            <span class="view-title">Tablero Principal</span>
+            <div class="search-bar">Filtrar por palabra clave...</div>
+        </div>
         </header>
         
         <div class="board-columns" cdkDropListGroup>
         
-        @for (column of columns; track column.title) {
+        @for (column of columns(); track column.id) {
             <div class="column">
-                <div class="column-header">
-                    <div class="header-title">
-                        <span class="status-circle" 
-                                [ngClass]="{
-                                'todo': column.status === 'todo',
-                                'progress': column.status === 'doing',
-                                'done': column.status === 'done',
-                                'backlog': column.status === 'backlog'
-                                }">
-                        </span>
-                        <h3>{{ column.title }}</h3>
-                        <span class="task-count">{{ column.tasks.length }}</span>
-                    </div>
-                    <button class="btn-options">...</button>
+            <div class="column-header">
+                <div class="header-title">
+                <span class="status-circle" 
+                        [ngClass]="{
+                        'todo': column.status === 'todo',
+                        'progress': column.status === 'doing',
+                        'done': column.status === 'done',
+                        'backlog': column.status === 'backlog'
+                        }">
+                </span>
+                <h3>{{ column.title }}</h3>
+                <span class="task-count">{{ column.tasks.length }}</span>
                 </div>
                 
-                <div class="task-list"
-                     cdkDropList
-                     [cdkDropListData]="column.tasks"
-                     (cdkDropListDropped)="drop($event)">
+                @if (isAdmin()) {
+                    <button class="btn-options">...</button>
+                }
+            </div>
+            
+            <div class="task-list"
+                cdkDropList
+                [cdkDropListData]="column.tasks"
+                (cdkDropListDropped)="drop($event)">
 
-                    @for (task of column.tasks; track task.id) {
-                    <div class="task-card" cdkDrag>
-                        
-                        <div class="custom-placeholder" *cdkDragPlaceholder></div>
+                @for (task of column.tasks; track task.id) {
+                <div class="task-card" 
+                    cdkDrag
+                    [cdkDragDisabled]="!isAdmin() && task.user_id !== currentUserId()">
+                    
+                    <div class="custom-placeholder" *cdkDragPlaceholder></div>
 
-                        @if (task.tag) {
-                        <div class="card-meta">
-                            <span class="tag">{{ task.tag }}</span>
-                        </div>
-                        }
-                        <p class="task-title">{{ task.title }}</p>
-                    </div>
+                    @if (task.tag) {
+                    <div class="card-meta"><span class="tag">{{ task.tag }}</span></div>
                     }
+                    
+                    <p class="task-title">{{ task.title }}</p>
+                    
+                    <div class="card-footer">
+                        @if (task.user_id === currentUserId()) {
+                            <span class="owner-badge">Tú</span>
+                        } @else {
+                            @if (!isAdmin()) {
+                                <span>🔒</span> }
+                        }
+                    </div>
                 </div>
-        
-                <button class="btn-add-task">
-                    <span class="plus">+</span> Add Task
+                }
+            </div>
+    
+            @if (activeColumnID() === column.id) {
+                <div class="add-task-form">
+                        <textarea [ngModel]="newTaskTitle()" 
+                            (ngModelChange)="newTaskTitle.set($event)"
+                            (keyup.enter)="onAddTask(column)" 
+                            class="task-input" rows="2" placeholder="Escribe un título..."></textarea>
+                    <div class="form-actions">
+                        <button (click)="onAddTask(column)" class="btn-save">Añadir</button>
+                        <button (click)="cancelAddTask()" class="btn-cancel">✕</button>
+                    </div>
+                </div>
+            } @else {
+                <button class="btn-add-task" (click)="enableAddTask(column.id)">
+                    <span class="plus">+</span> Añadir tarjeta
                 </button>
+            }
             </div>
         }
         </div>
