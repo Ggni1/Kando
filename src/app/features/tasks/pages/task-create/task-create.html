@@ -40,10 +40,14 @@
                 <div class="form-group">
                     <label for="columnId">Column <span class="required">*</span></label>
                     <select formControlName="columnId" class="form-input">
-                        <option value="1">Column 1</option>
-                        <option value="2">Column 2</option>
-                        <option value="3">Column 3</option>
+                        <option value="" disabled>Select a column</option>
+                        @for (column of columns(); track column.id) {
+                            <option [value]="column.id">{{ column.title }}</option>
+                        }
                     </select>
+                    @if (form.get('columnId')?.invalid && form.get('columnId')?.touched) {
+                        <span class="error">Column is required</span>
+                    }
                 </div>
 
                 <div class="form-actions">

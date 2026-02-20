@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { Footer } from '../../../../shared/components/footer/footer';
 import { TaskService } from '../../../../core/services/task.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Column } from '../../../../core/models/board';
 
 @Component({
     selector: 'app-task-create',
@@ -14,7 +15,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     templateUrl: './task-create.html',
     styleUrl: './task-create.scss'
 })
-export class TaskCreate {
+export class TaskCreate implements OnInit {
     private fb = inject(FormBuilder);
     private taskService = inject(TaskService);
     public authService = inject(AuthService);
@@ -23,14 +24,31 @@ export class TaskCreate {
     loading = signal(false);
     errorMessage = signal('');
     successMessage = signal('');
+    columns = signal<Column[]>([]);
 
     readonly isGuest = computed(() => this.authService.userRole() === 'guest');
 
     form = this.fb.group({
         title: ['', [Validators.required, Validators.minLength(3)]],
         tag: [''],
-        columnId: [1, [Validators.required]]
+        columnId: [0, [Validators.required]]
     });
+
+    /* EN: Load columns on component initialization.
+     * ES: Carga las columnas al inicializar el componente.
+     */
+    async ngOnInit() {
+        try {
+            const columnsData = await this.taskService.getColumns();
+            this.columns.set(columnsData);
+            if (columnsData.length > 0) {
+                this.form.patchValue({ columnId: columnsData[0].id });
+            }
+        } catch (error) {
+            console.error('Error loading columns:', error);
+            this.errorMessage.set('Error loading columns');
+        }
+    }
 
     /* EN: Submit the task creation form.
      * ES: Envia el formulario de creacion de tarea.
@@ -44,7 +62,7 @@ export class TaskCreate {
         try {
             this.loading.set(true);
             const { title, tag, columnId } = this.form.value;
-            await this.taskService.createTask(title!, columnId!, tag || undefined);
+            await this.taskService.createTask(title!, Number(columnId), tag || undefined);
             this.successMessage.set('Task created successfully');
             setTimeout(() => this.router.navigate(['/tasks']), 1500);
         } catch (error: any) {
