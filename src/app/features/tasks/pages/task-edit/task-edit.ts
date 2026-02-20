@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { Footer } from '../../../../shared/components/footer/footer';
-import { Task } from '../../../../core/models/board';
+import { Task, Column } from '../../../../core/models/board';
 import { TaskService } from '../../../../core/services/task.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { supabase } from '../../../../core/services/supabase';
@@ -25,6 +25,7 @@ export class TaskEdit implements OnInit {
 
     task = signal<Task | null>(null);
     username = signal<string>('');
+    columns = signal<Column[]>([]);
     loading = signal(true);
     submitting = signal(false);
     errorMessage = signal('');
@@ -35,10 +36,17 @@ export class TaskEdit implements OnInit {
     form = this.fb.group({
         title: ['', [Validators.required, Validators.minLength(3)]],
         tag: [''],
-        columnId: [1, [Validators.required]]
+        columnId: [0, [Validators.required]]
     });
 
     async ngOnInit() {
+        try {
+            const columnsData = await this.taskService.getColumns();
+            this.columns.set(columnsData);
+        } catch (error) {
+            console.error('Error loading columns:', error);
+            this.errorMessage.set('Error loading columns');
+        }
         const id = this.route.snapshot.params['id'];
         await this.loadTask(parseInt(id));
     }
@@ -107,7 +115,7 @@ export class TaskEdit implements OnInit {
             await this.taskService.updateTask(taskId, {
                 title: title!,
                 tag: tag || undefined,
-                column_id: columnId!
+                column_id: Number(columnId)
             });
             
             this.successMessage.set('Task updated successfully');
