@@ -17,6 +17,14 @@ Características principales:
 - Modo invitado para explorar sin registrarse
 - Interfaz responsiva y accesible
 
+## Acceso Público
+
+La aplicación se encuentra desplegada en producción en:
+
+**[https://kando-app-psi.vercel.app/](https://kando-app-psi.vercel.app/)**
+
+Puedes acceder directamente para probar todas las funcionalidades sin necesidad de instalación local.
+
 ## Stack Tecnológico
 
 - Angular 21 (Standalone Components)
